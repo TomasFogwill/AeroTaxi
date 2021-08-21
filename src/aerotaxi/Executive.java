@@ -1,30 +1,17 @@
-
 package aerotaxi;
 
 import java.util.Scanner;
+import models.User;
 
-public class Usuario {
-    private String nombre;
-    private String apellido;
-    private String dni;
-    private int edad;
-    private float totalVuelos;
-    private String mejorCateg;
+public abstract class Executive {
     
-    public Usuario(String nombre,String apellido, String dni,int edad){
-    this.nombre=nombre;
-    this.apellido=apellido;
-    this.dni=dni;
-    this.edad=edad;
+    public static User logIn(){
+    User user=new User();
+    return user;
     }
     
-    public static void verificarUsuario(){
-    }
     
-    public static void iniciarSesion(){
-    }
-    
-    public Usuario(){
+    public static User register(){
         String id=null;
         int age=0;
         Scanner entradaReg=new Scanner(System.in);
@@ -51,47 +38,45 @@ public class Usuario {
               age=entradaReg.nextInt();
               verifR2=true;}}
         while(verifR2==false);
-        nombre=name;
-        apellido=surname;
-        dni=id;
-        edad=age;                
-    }
-        
+        User user=new User(name,surname,id,age);
+        return user;
+        }                
     
     
-    public static Usuario ingresoUsuario(){
-       Usuario user=new Usuario();
+    public static User initial(){
        boolean verif=false;
        Scanner entradaIngrUs=new Scanner(System.in);
-       System.out.println("\n1.Iniciar sesión\n2.Registrarse\n3.Atras");
+       System.out.println("\n1.Iniciar sesión\n2.Registrarse\n3.Salir");
        do{System.out.print("Seleccione la opcion correspondiente: ");
        String var=entradaIngrUs.nextLine();
        switch(var){
            case "1":
-               Usuario.iniciarSesion();
-               verif=true;
-               break;
-           case "2": 
-               
-               verif=true;
-               break;
+               User user1=Executive.logIn();
+               return user1;
+           case "2":
+               User user2=Executive.register();
+               return user2;
            case "3":
-               verif=true;
-               break;
+           return null;
            default:
                System.out.println("\nLa opcion ingresada no es válida\n");
                break;}}
        while(verif==false);
-       
-       return user;
+       return null;
        }
-
-    @Override
-    public String toString() {
-        return "Usuario{" + "nombre=" + nombre + ", apellido=" + apellido + ", dni=" + dni + ", edad=" + edad + ", totalVuelos=" + totalVuelos + ", mejorCateg=" + mejorCateg + '}';
-    }
     
+   public static void contract(){
+       System.out.println("\nBienvenido a la gestión de contratación de vuelos");
+       System.out.print("");
+//Inicialmente indicar la fecha deseada para realizar un vuelo.
+       //Seleccionar el origen de su vuelo y posteriormente el destino.
+       //El usuario debe indicar la cantidad de acompañantes que tendrá 
+         //en el vuelo.
+       //  Ahora el usuario debe seleccionar un avión. El sistema se encargará
+//demostrar los aviones disponibles para esa fecha y el usuario elige el
+//deseado.
+//Por último, el sistema debe mostrar el costo total del vuelo y el 
+//usuario deberá confirmar para generar el vuelo.
+   }
     
-    }
-    
-
+}
