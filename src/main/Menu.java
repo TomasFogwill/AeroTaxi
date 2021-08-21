@@ -1,5 +1,5 @@
 
-package aerotaxi;
+package main;
 
 import models.User;
 import java.util.Scanner;
@@ -26,7 +26,7 @@ public abstract class Menu {
        do{System.out.print("Ingrese la opción deseada: ");
        String opcion=entradaMenu.nextLine();
        switch(opcion){
-           case "1":Executive.contract();
+           case "1":Executive.contract(user);
                verif=true;
                break;
            case "2":

@@ -1,67 +1,69 @@
 
 package models;
 
-import java.util.Scanner;
+
 
 public class Route {
-    City origin;//ciudad de origen
-    City destiny;//ciudad de destino
-    int distance; //distancia en km
-    
-    enum City{
-    CORDOBA,
-    BUENOS_AIRES,
-    SANTIAGO_DE_CHILE,
-    MONTEVIDEO    
-    }
-    
-public Route(){
-        City c1 = null;
-        City c2 = null;
-    Scanner e=new Scanner(System.in);
-    System.out.println("Los vuelos disponibles conectan las siguientes ciudades:\n1.Córdoba\n2.Buenos Aires\n3.Montevideo\n4.Santiago de Chile");
-    do{System.out.print("Ingrese el número que corresponda a la ciudad de origen: ");
-    String ciudad1=e.nextLine();
-    switch(ciudad1){
-        case "1": c1=City.CORDOBA;
-        break;
-        case "2": c1=City.BUENOS_AIRES;
-        break;
-        case "3": c1=City.MONTEVIDEO;
-        break;
-        case "4": c1=City.SANTIAGO_DE_CHILE;
-        break;
-        default:System.out.println("No ingresó un caracter correspondiente\n");
-        break;}}
-    while(c1==null);
-    System.out.println("Usted eligió de origen: "+c1);
-    do{System.out.print("\nIngrese el número que corresponda a la ciudad de destino: ");
-    String ciudad2=e.nextLine();
-    switch(ciudad2){
-        case "1": c2=City.CORDOBA;
-        break;
-        case "2": c2=City.BUENOS_AIRES;
-        break;
-        case "3": c2=City.MONTEVIDEO;
-        break;
-        case "4": c2=City.SANTIAGO_DE_CHILE;
-        break;
-        default:System.out.println("No ingresó un caracter correspondiente\n");
-        break;}}
-    while(c2==null);
-    System.out.println("Usted eligió de destino: "+c2);
-    if(c1==c2){
-        System.out.println("Error de validación: destino y origen son idénticos. Se anula la operación");
-    }else{
-    origin=c1;
-    destiny=c2;
-    
-    }
-    
-        
-    }   
-}
+   public City origin;//ciudad de origen
+   public City destiny;//ciudad de destino
+   public int distance;
 
+    public City getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(City origin) {
+        this.origin = origin;
+    }
+
+    public City getDestiny() {
+        return destiny;
+    }
+
+    public void setDestiny(City destiny) {
+        this.destiny = destiny;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
+   
+   
+  
+   public Route(){ 
+        } 
+
+   public Route(City origin, City destiny) {
+        this.origin = origin;
+        this.destiny = destiny;
+            }
+   
+   public int calcDist(){
+       int distance=0;
+       City c1=origin;
+       City c2=destiny;
+       if((c1==City.BUENOS_AIRES&&c2==City.CORDOBA)||(c2==City.BUENOS_AIRES&&c1==City.CORDOBA)){
+       distance=695;
+       }if((c1==City.BUENOS_AIRES&&c2==City.SANTIAGO_DE_CHILE)||(c2==City.BUENOS_AIRES&&c1==City.SANTIAGO_DE_CHILE)){
+       distance=1400;
+       }if((c1==City.BUENOS_AIRES&&c2==City.MONTEVIDEO)||(c2==City.BUENOS_AIRES&&c1==City.MONTEVIDEO)){
+       distance=950;
+       }if((c1==City.CORDOBA&&c2==City.MONTEVIDEO)||(c2==City.CORDOBA&&c1==City.MONTEVIDEO)){
+       distance=1190;
+       }if((c1==City.CORDOBA&&c2==City.SANTIAGO_DE_CHILE)||(c2==City.CORDOBA&&c1==City.SANTIAGO_DE_CHILE)){
+       distance=1050;
+       }if((c1==City.MONTEVIDEO&&c2==City.SANTIAGO_DE_CHILE)||(c2==City.MONTEVIDEO&&c1==City.SANTIAGO_DE_CHILE)){
+       distance=2100;
+       }
+       return distance;
+       }
+
+
+}
     
 
         
