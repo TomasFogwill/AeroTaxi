@@ -1,7 +1,9 @@
 package main;
 
+import dao.Persistence;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Scanner;
 import models.City;
 import models.Flight;
@@ -11,10 +13,27 @@ import models.User;
 public abstract class Executive {
     
     public static User logIn(){
+    ArrayList<User> users=Persistence.loadUsers();
+    Scanner scanner=new Scanner(System.in);
+    System.out.println("Ingrese los siguientes datos para iniciar sesión");
+    System.out.print("Nombre: ");
+    String name=scanner.nextLine();
+    System.out.print("Apellido: ");
+    String surname=scanner.nextLine();
+    System.out.print("DNI: ");
+    String id=scanner.nextLine();
+    int t=0;
+    boolean verif;
+    for (int i=0; i < users.size(); i++){
+        if(users.get(i).getName().equals(name)&&users.get(i).getId().equals(id)){
+        
+        }
+        
+    
+    }
     User user=new User();
     return user;
-    }
-    
+    }    
     
     public static User register(){
         String id=null;
@@ -44,6 +63,7 @@ public abstract class Executive {
               verifR2=true;}}
         while(verifR2==false);
         User user=new User(name,surname,id,age);
+        Persistence.saveNewUser(user);
         return user;
         }                
     
@@ -114,11 +134,7 @@ public abstract class Executive {
     route.setDistance(dist);
     return route;}
     return null;
-}    
-    
-    
-    
-    
+} 
     
    public static void contract(User user){
        Flight flight = null;
@@ -140,6 +156,10 @@ public abstract class Executive {
 //deseado.
 //Por último, el sistema debe mostrar el costo total del vuelo y el 
 //usuario deberá confirmar para generar el vuelo.
+   }
+   
+   public static void cancel(){
+       
    }
     
 }

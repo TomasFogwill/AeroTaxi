@@ -51,7 +51,15 @@ public abstract class Menu {
        
        
        
-   public static void menuAdmin(){}
+   public static void menuAdmin(){
+       System.out.println("///////////////////AEROTAXI////////////////////");
+    System.out.println("//Bienvenido al menú de administrador//\n///////////////////////////////////////////////");
+       System.out.println("Seleccione la opción deseada");
+//agregar avión al sistema
+   //consultar todas los vuelos en una fecha dada
+   //listar todos los clientes indicando todos sus datos personales
+   //,mejor categoría usada y el total gastado de los vuelos
+   }
    
    
    }
