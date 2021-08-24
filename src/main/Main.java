@@ -1,6 +1,7 @@
 
 package main;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.Persistence;
 import java.io.File;
@@ -11,6 +12,7 @@ import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
+import models.Aircraft;
 import models.City;
 import models.Route;
 
@@ -21,7 +23,7 @@ public abstract class Main {
     
  
     
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException{
 //    User user1=new User("Tomas","Fogwill","40129369",24);
 //    User user2=new User("admin","","0000",24);
 //    User user3=new User("Pepe","Martinez","38999999",21); 
@@ -36,8 +38,20 @@ public abstract class Main {
 //System.out.println(f1.exists());
 //File f2=new File(f1,"DNI.pdf");
 //System.out.println(f2.exists());
+//ObjectMapper mapper=new ObjectMapper(); 
+//    ArrayList<Aircraft> aircrafts = new ArrayList<Aircraft>();    
+//    File file=new File("src/dao/data/Aircrafts.json");
+//        System.out.println(file.exists());
+//    
+//            aircrafts=mapper.readValue(file, new TypeReference<ArrayList<Aircraft>>(){});
+//      
+//        try {
+//            file.createNewFile();
+//            mapper.writeValue(file,aircrafts);
+//        } catch (IOException ex) {
+//            System.out.println("Algo ha salido mal");
+//          }
 Menu.first();
-
+   
     }
-    
 }
