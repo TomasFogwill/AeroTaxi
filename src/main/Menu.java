@@ -1,6 +1,7 @@
 
 package main;
 
+import java.util.Objects;
 import models.User;
 import java.util.Scanner;
 
@@ -10,10 +11,10 @@ public abstract class Menu {
     System.out.println("///////////////////AEROTAXI////////////////////");
     System.out.println("//Bienvenido al servicio de gestión de vuelos//\n///////////////////////////////////////////////");
     User user=Executive.initial();
-    if("admin".equals(user.getName())&&"0000".equals(user.getId())){
+    if(Objects.isNull(user)){
+    }else if("admin".equals(user.getName())&&"0000".equals(user.getId())){
     Menu.menuAdmin();
-        System.out.println("Se ejecuta el menu de admin");
-    }else{
+    }else {    
     Menu.menu(user);
     }
     }

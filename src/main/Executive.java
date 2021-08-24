@@ -13,26 +13,27 @@ import models.User;
 public abstract class Executive {
     
     public static User logIn(){
-    ArrayList<User> users=Persistence.loadUsers();
+    ArrayList<User> users=Persistence.getUsers();
     Scanner scanner=new Scanner(System.in);
-    System.out.println("Ingrese los siguientes datos para iniciar sesión");
-    System.out.print("Nombre: ");
-    String name=scanner.nextLine();
-    System.out.print("Apellido: ");
-    String surname=scanner.nextLine();
-    System.out.print("DNI: ");
+    User user=new User();
+    System.out.print("Ingrese su DNI para iniciar sesión: ");
     String id=scanner.nextLine();
     int t=0;
-    boolean verif;
     for (int i=0; i < users.size(); i++){
-        if(users.get(i).getName().equals(name)&&users.get(i).getId().equals(id)){
-        
-        }
-        
-    
+        if(users.get(i).getId().equals(id)){
+        user=users.get(i);
+        t++;
+        }}
+    switch(t){
+        case 0:System.out.println("Los datos no se corresponden");
+        user=null;
+        break;
+        case 1:System.out.println("Sesión inciada");
+        break;
+        default:System.out.println("Se encontró un problema, contacte al administrador");
+        user=null;
     }
-    User user=new User();
-    return user;
+        return user;
     }    
     
     public static User register(){
@@ -71,13 +72,18 @@ public abstract class Executive {
     public static User initial(){
        boolean verif=false;
        Scanner entradaIngrUs=new Scanner(System.in);
-       System.out.println("\n1.Iniciar sesión\n2.Registrarse\n3.Salir");
-       do{System.out.print("Seleccione la opcion correspondiente: ");
+       do{System.out.println("\n1.Iniciar sesión\n2.Registrarse\n3.Salir");
+       System.out.print("Seleccione la opcion correspondiente: ");
        String var=entradaIngrUs.nextLine();
        switch(var){
            case "1":
                User user1=Executive.logIn();
+               if(user1==null){
+                   System.out.println("No se ha podido iniciar sesión");
+               break;
+               }else{
                return user1;
+               }          
            case "2":
                User user2=Executive.register();
                return user2;
