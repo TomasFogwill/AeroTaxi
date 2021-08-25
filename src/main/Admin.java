@@ -1,9 +1,11 @@
 
 package main;
 
+import dao.Persistence;
 import java.util.Scanner;
 import models.Aircraft;
 import models.BronzeAircraft;
+import models.GoldAircraft;
 import models.Kind;
 import models.SilverAircraft;
 
@@ -11,7 +13,7 @@ import models.SilverAircraft;
 public abstract class Admin {
     
     public static void addAircraft(){
-    Aircraft a;
+    Aircraft a = null;
     Scanner scanner=new Scanner(System.in);
     boolean verif0=false;
     String id = null;
@@ -35,6 +37,7 @@ public abstract class Admin {
               verif1=true;              
           }}
         while(verif1==false);
+        scanner.nextLine();
         float costXkm = 0;
         boolean verif2=false;
         do{System.out.print("Ingrese el costo por km de vuelo: ");
@@ -67,10 +70,11 @@ public abstract class Admin {
           System.out.println("No a ingresado un número válido");
           scanner.nextLine();
           }else{
-            scanner.nextFloat();
+            vMax=scanner.nextFloat();
               verif4=true;              
           }}
         while(verif4==false);
+        scanner.nextLine();
             Kind kindProp = null;
             boolean verif5=false;
             do{System.out.println("Los posibles tipos de propuslsión son los sigientes\n1.Motor a reacción\n2.Motor a hélice\n3.Motor a pistones ");
@@ -96,16 +100,54 @@ public abstract class Admin {
     String var=scanner.nextLine();
     switch(var){
         case "1":a=new BronzeAircraft(id,maxFuel,costXkm,maxPas,vMax,kindProp);
-            break;
+          verif6=true;  
+        break;
         case "2":a=new SilverAircraft(id,maxFuel,costXkm,maxPas,vMax,kindProp);
-            break;
-        case "3":
-            break;
-        default:
+        verif6=true;    
+        break;
+        case "3":boolean verif7=false;
+        String u;
+            System.out.println("¿El avión posee conexión continua de Wifi?\n1.Si\n2.No");
+         do{System.out.print("Ingrese la opción correcta: ");
+         u=scanner.nextLine();
+             switch(u){
+                 case "1":a=new GoldAircraft("Si",id,maxFuel,costXkm,maxPas,vMax,kindProp);
+                 verif7=true;    
+                 break;
+                 case "2":a=new GoldAircraft("No",id,maxFuel,costXkm,maxPas,vMax,kindProp);
+                     verif7=true;
+                 break;
+                 default:System.out.println("No ingreso una opción válida");
+                 break;
+                          }
+         }while(verif7==false);
+         verif6=true;
+        break;
+        default:System.out.println("No ingreso una opción válida");
             break;
     }
     }while(verif6==false);
-    }
+    boolean verif8=false;
+    
+    String f;
+        System.out.println(a.toString());
+        do{System.out.println("¿Confirmar y guardar?\n1.Si\n2.No");
+        f=scanner.nextLine();
+        switch(f){
+            case "1":Persistence.saveNewAircraft(a);
+                System.out.println("El avión ha sido guardado correctamente");
+                verif8=true;
+                break;
+            case "2":System.out.println("No se han guardado los cambios");
+            verif8=true;    
+            break;
+            default:System.out.println("No ha ingresado una opción válida");
+                break;
+        
+        }
+        }while(verif8=false);
+        }
+    
  
     public static void flightList(){
         

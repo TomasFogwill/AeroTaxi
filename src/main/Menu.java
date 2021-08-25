@@ -56,6 +56,8 @@ public abstract class Menu {
        System.out.println("///////////////////AEROTAXI////////////////////");
     System.out.println("//Bienvenido al menú de administrador//\n///////////////////////////////////////////////");
        System.out.println("Seleccione la opción deseada");
+       System.out.println("Vamos a agregar aviones: ");
+       Admin.addAircraft();
 //agregar avión al sistema
    //consultar todas los vuelos en una fecha dada
    //listar todos los clientes indicando todos sus datos personales

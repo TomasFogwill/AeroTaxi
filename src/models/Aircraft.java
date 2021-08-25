@@ -1,6 +1,20 @@
 
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = BronzeAircraft.class, name = "BronzeAircraft"),
+
+    @JsonSubTypes.Type(value = SilverAircraft.class, name = "SilverAircraft"),
+            
+    @JsonSubTypes.Type(value = GoldAircraft.class, name = "GoldAircraft")}
+)
+
 public abstract class Aircraft {
     protected String id;//id para reconocer el avión
     protected float maxFuel;//capacidad de combustible
@@ -17,6 +31,10 @@ public abstract class Aircraft {
         this.vMax = vMax;
         this.kindProp = kindProp;
     }
+
+    public Aircraft() {
+    }
+    
     
    
 

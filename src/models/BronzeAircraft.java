@@ -5,6 +5,11 @@ public class BronzeAircraft extends Aircraft{
     
     private final String categ="Bronce";
 
+    public BronzeAircraft() {
+    }
+    
+    
+
     public BronzeAircraft(String id, float maxFuel, float costXkm, int maxPas, float vMax, Kind kindProp) {
         super(id, maxFuel, costXkm, maxPas, vMax, kindProp);
     }
