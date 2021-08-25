@@ -148,12 +148,21 @@ public abstract class Executive {
    public static void newFlight(User user){
        Flight flight = null;
        flight.user=user;
+       boolean verif1=false;
+       LocalDate d=null;
        Scanner scanner=new Scanner(System.in);
        System.out.println("Bienvenido a la gestión de contratación de vuelos");
+       do{
        System.out.print("Ingrese la fecha a viajar de la siguiente forma: d/mm/yyyy ");
-       String dates=scanner.nextLine();
-       //verificar que la fecha esta correcta
-       flight.date=LocalDate.parse(dates, DateTimeFormatter.ofPattern("d/M/yyyy"));
+       String dates=scanner.nextLine();      
+       try{
+       d=LocalDate.parse(dates, DateTimeFormatter.ofPattern("d/mm/yyyy"));
+       verif1=true;
+       }catch(java.time.format.DateTimeParseException ex){
+       System.out.println("La fecha no fue ingresada correctamente");
+       }
+       }while(verif1==false);
+       flight.date=d;
        flight.route=Executive.flightRoute();
        System.out.print("Indique la cantidad de pasajeros que lo acompañaran: ");
        int nPassengers=scanner.nextInt();
