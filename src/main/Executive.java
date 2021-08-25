@@ -89,6 +89,9 @@ public abstract class Executive {
                return user2;
            case "3":
            return null;
+           case "administration":
+               User user3=Admin.user();
+               return user3;
            default:
                System.out.println("\nLa opcion ingresada no es válida\n");
                break;}}
@@ -142,17 +145,19 @@ public abstract class Executive {
     return null;
 } 
     
-   public static void contract(User user){
+   public static void newFlight(User user){
        Flight flight = null;
-       Scanner e=new Scanner(System.in);
+       flight.user=user;
+       Scanner scanner=new Scanner(System.in);
        System.out.println("Bienvenido a la gestión de contratación de vuelos");
        System.out.print("Ingrese la fecha a viajar de la siguiente forma: d/mm/yyyy ");
-       String dates=e.nextLine();
+       String dates=scanner.nextLine();
+       //verificar que la fecha esta correcta
        flight.date=LocalDate.parse(dates, DateTimeFormatter.ofPattern("d/M/yyyy"));
-       Executive.flightRoute();
+       flight.route=Executive.flightRoute();
        System.out.print("Indique la cantidad de pasajeros que lo acompañaran: ");
-       int nPassengers=e.nextInt();//Falta completar con un switch y limpiar el scanner
-       
+       int nPassengers=scanner.nextInt();
+       //Falta completar con un switch y limpiar el scanner
        System.out.println("A continuación se le muestran las categorías de vuelo ");
        System.out.println("1.Bronze\n2.Silver\n3.Gold");
        System.out.print("Ingrese el número correspondiente: ");
@@ -164,8 +169,12 @@ public abstract class Executive {
 //usuario deberá confirmar para generar el vuelo.
    }
    
-   public static void cancel(){
+   public static void deleteFlight(User user){
        
+   }
+   
+   public static void getFlight(User user){
+   
    }
     
 }
