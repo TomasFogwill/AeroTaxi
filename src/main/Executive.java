@@ -165,8 +165,8 @@ public abstract class Executive {
     return null;
 } 
     
-   public static void newFlight(User user){
-       Flight flight = null;
+   public static Flight newFlight(User user){
+       Flight flight =new Flight();
        flight.user=user;
        boolean verif1=false;
        LocalDate d=null;
@@ -176,13 +176,17 @@ public abstract class Executive {
        System.out.print("Ingrese la fecha a viajar de la siguiente forma: d/mm/yyyy ");
        String dates=scanner.nextLine();      
        try{
-       d=LocalDate.parse(dates, DateTimeFormatter.ofPattern("d/mm/yyyy"));
+       d=LocalDate.parse(dates, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
        verif1=true;
        }catch(java.time.format.DateTimeParseException ex){
        System.out.println("La fecha no fue ingresada correctamente");
        }
        }while(verif1==false);
        flight.date=d;
+       ArrayList<Aircraft> available=Persistence.getAvailableAircraft(flight.date);
+       if(available==null){
+           System.out.println("No hay aviones disponibles para la fecha deseada");    
+       }
        flight.route=Executive.flightRoute();
        boolean verif2=false;
        do{System.out.print("Indique la cantidad de pasajeros que lo acompañaran: ");
@@ -194,36 +198,54 @@ public abstract class Executive {
        verif2=true;
        }       
        }while(verif2==false);
-       System.out.println("A continuación se le muestran las categorías de vuelo ");
-       System.out.println("1.Bronze\n2.Silver\n3.Gold");
-       boolean verif3=false;
-       ArrayList<Aircraft> available;
-       do{System.out.print("Ingrese el número correspondiente a la clase: ");
-       String t=scanner.nextLine();
-       switch(t){
-           case "1":
-               available=Persistence.getAvailableAircraft(BronzeAircraft.class, flight.date);
-               verif3=true;
-               break;
-           case "2":
-               available=Persistence.getAvailableAircraft(SilverAircraft.class, flight.date);
-               verif3=true;
-               break;
-           case "3":
-               available=Persistence.getAvailableAircraft(GoldAircraft.class, flight.date);
-               verif3=true;
-               break;
-           default:
-               System.out.println("No ha ingresado una opción válida\n");
-               break;
+       int a=0;
+       for(Aircraft i:available){
+       if(i.getMaxPas()>a){
+         a=i.getMaxPas();       
+       }}
+       if(a>flight.nPassengers){
+           System.out.println("No tenemos aviones disponibles para esa cantidad de pasajeros");
+       return null;
        }
-       }while(verif3=false);
-       
-//Ahora el usuario debe seleccionar un avión. El sistema se encargará
-//demostrar los aviones disponibles para esa fecha y el usuario elige el
-//deseado.
-//Por último, el sistema debe mostrar el costo total del vuelo y el 
-//usuario deberá confirmar para generar el vuelo.
+       for(Aircraft i:available){
+        if(flight.nPassengers>i.getMaxPas()){
+        available.remove(i);
+        }}   
+       System.out.println("A continuación se le presentan las fichas de los aviones disponibles:\n");
+       for(Aircraft i:available){
+           System.out.println(i.toString());
+       }
+       boolean verif3=false;
+       do{System.out.println("Ingrese el ID deseado o ingrese 0 para salir");
+       String anames=scanner.nextLine();
+       if(anames=="0"){
+       return null;
+       }for(Aircraft i:available){
+       if(anames.equals(i.getId())){
+       flight.aircraft=i;
+           System.out.println("Usted seleccionó el avión con ID "+flight.aircraft.getId()+"de categoría "+flight.aircraft.getClass());
+       verif3=true;
+       }
+       if(verif3==false){
+           System.out.println("No escrito ningún ID correcto");    
+       }}
+       }while(verif3==false);
+       flight.cost=flight.calcCost();
+       System.out.println("El ticket de vuelo: "+flight.toString());
+       boolean verif4=false;
+       do{System.out.println("¿Confirmar?\n1.Si\n2.No");
+       String v=scanner.nextLine();
+       switch(v){
+           case "1":Persistence.saveNewFlight(flight);
+               System.out.println("El vuelo se a confirmado");
+               return flight;
+           case "2":System.out.println("El vuelo no se ha confirmado");
+           return null;
+           default:System.out.println("No ha ingresado una opcion válida");
+               break;      
+       }
+       }while(verif4==false);
+   return null;
    }
    
    public static void deleteFlight(User user){
