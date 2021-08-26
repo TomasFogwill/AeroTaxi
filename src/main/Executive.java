@@ -5,9 +5,13 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
+import models.Aircraft;
+import models.BronzeAircraft;
 import models.City;
 import models.Flight;
+import models.GoldAircraft;
 import models.Route;
+import models.SilverAircraft;
 import models.User;
 
 public abstract class Executive {
@@ -40,10 +44,7 @@ public abstract class Executive {
         String id=null;
         int age=0;
         Scanner entradaReg=new Scanner(System.in);
-        System.out.print("Vamos a registrar su usuario\nIngrese su nombre: ");
-        String name=entradaReg.nextLine();
-        System.out.print("Ingrese su apellido: ");
-        String surname=entradaReg.nextLine();
+        System.out.println("Vamos a registrar su usuario");
         boolean verifR=false;
         do{System.out.print("Ingrese su DNI: ");
           if(!entradaReg.hasNextInt()){
@@ -51,9 +52,23 @@ public abstract class Executive {
           entradaReg.nextLine();
           }else{
               id=entradaReg.nextLine();
-              verifR=true;              
-          }}
-        while(verifR==false);
+         ArrayList<User> users=Persistence.getUsers();
+         int a=0;
+         for(int i=0;i<users.size();i++){
+         if(id.equals(users.get(i).getId())){    
+         a++;
+         }}
+         if(a==0){
+         verifR=true;    
+         }else{
+             System.out.println("Ya se encuentra un usuario registrado con ese DNI,vuelva a intentarlo");    
+        return null;
+         }}}                
+        while(verifR==false);        
+        System.out.print("Ingrese su nombre: ");
+        String name=entradaReg.nextLine();
+        System.out.print("Ingrese su apellido: ");
+        String surname=entradaReg.nextLine();
         boolean verifR2=false;
         do{System.out.print("Ingrese su edad: ");
           if(!entradaReg.hasNextInt()){
@@ -86,7 +101,12 @@ public abstract class Executive {
                }          
            case "2":
                User user2=Executive.register();
+               if(user2==null){
+                   System.out.println("No se ha podido registrar al usuario");
+               break;
+               }else{
                return user2;
+               }          
            case "3":
            return null;
            case "administration":
@@ -164,14 +184,42 @@ public abstract class Executive {
        }while(verif1==false);
        flight.date=d;
        flight.route=Executive.flightRoute();
-       System.out.print("Indique la cantidad de pasajeros que lo acompañaran: ");
-       int nPassengers=scanner.nextInt();
-       //Falta completar con un switch y limpiar el scanner
+       boolean verif2=false;
+       do{System.out.print("Indique la cantidad de pasajeros que lo acompañaran: ");
+       if(!scanner.hasNextInt()){
+           System.out.println("No ha ingresado un número válido");
+           scanner.nextLine();
+       }else{
+       flight.nPassengers=scanner.nextInt();
+       verif2=true;
+       }       
+       }while(verif2==false);
        System.out.println("A continuación se le muestran las categorías de vuelo ");
        System.out.println("1.Bronze\n2.Silver\n3.Gold");
-       System.out.print("Ingrese el número correspondiente: ");
+       boolean verif3=false;
+       ArrayList<Aircraft> available;
+       do{System.out.print("Ingrese el número correspondiente a la clase: ");
+       String t=scanner.nextLine();
+       switch(t){
+           case "1":
+               available=Persistence.getAvailableAircraft(BronzeAircraft.class, flight.date);
+               verif3=true;
+               break;
+           case "2":
+               available=Persistence.getAvailableAircraft(SilverAircraft.class, flight.date);
+               verif3=true;
+               break;
+           case "3":
+               available=Persistence.getAvailableAircraft(GoldAircraft.class, flight.date);
+               verif3=true;
+               break;
+           default:
+               System.out.println("No ha ingresado una opción válida\n");
+               break;
+       }
+       }while(verif3=false);
        
-//  Ahora el usuario debe seleccionar un avión. El sistema se encargará
+//Ahora el usuario debe seleccionar un avión. El sistema se encargará
 //demostrar los aviones disponibles para esa fecha y el usuario elige el
 //deseado.
 //Por último, el sistema debe mostrar el costo total del vuelo y el 
