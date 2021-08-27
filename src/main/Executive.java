@@ -173,7 +173,7 @@ public abstract class Executive {
        Scanner scanner=new Scanner(System.in);
        System.out.println("Bienvenido a la gestión de contratación de vuelos");
        do{
-       System.out.print("Ingrese la fecha a viajar de la siguiente forma: d/mm/yyyy ");
+       System.out.print("Ingrese la fecha a viajar de la siguiente forma dd/mm/yyyy: ");
        String dates=scanner.nextLine();      
        try{
        d=LocalDate.parse(dates, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
@@ -194,7 +194,7 @@ public abstract class Executive {
            System.out.println("No ha ingresado un número válido");
            scanner.nextLine();
        }else{
-       flight.nPassengers=scanner.nextInt();
+       flight.nPassengers=scanner.nextInt()+1;
        verif2=true;
        }       
        }while(verif2==false);
@@ -203,17 +203,18 @@ public abstract class Executive {
        if(i.getMaxPas()>a){
          a=i.getMaxPas();       
        }}
-       if(a>flight.nPassengers){
+       if(flight.nPassengers>a){
            System.out.println("No tenemos aviones disponibles para esa cantidad de pasajeros");
        return null;
        }
+       scanner.nextLine();
        for(Aircraft i:available){
         if(flight.nPassengers>i.getMaxPas()){
         available.remove(i);
         }}   
        System.out.println("A continuación se le presentan las fichas de los aviones disponibles:\n");
        for(Aircraft i:available){
-           System.out.println(i.toString());
+           System.out.println(i.userString()+"\n");
        }
        boolean verif3=false;
        do{System.out.println("Ingrese el ID deseado o ingrese 0 para salir");
@@ -223,15 +224,15 @@ public abstract class Executive {
        }for(Aircraft i:available){
        if(anames.equals(i.getId())){
        flight.aircraft=i;
-           System.out.println("Usted seleccionó el avión con ID "+flight.aircraft.getId()+"de categoría "+flight.aircraft.getClass());
+       System.out.println("Usted seleccionó el avión con ID "+flight.aircraft.getId()+"de categoría "+flight.aircraft.getClass());
        verif3=true;
-       }
+       }}
        if(verif3==false){
            System.out.println("No escrito ningún ID correcto");    
-       }}
+       }
        }while(verif3==false);
        flight.cost=flight.calcCost();
-       System.out.println("El ticket de vuelo: "+flight.toString());
+       System.out.println("El ticket de vuelo:\n"+flight.toString());
        boolean verif4=false;
        do{System.out.println("¿Confirmar?\n1.Si\n2.No");
        String v=scanner.nextLine();
