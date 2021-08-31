@@ -1,21 +1,27 @@
 
 package models;
 
+import java.util.Locale;
+
 public class SilverAircraft extends Aircraft{
-    private final String categ="Silver";
+    public String category="Silver";
 
     public SilverAircraft(String id, float maxFuel, float costXkm, int maxPas, float vMax, Kind kindProp) {
-        super(id, maxFuel, costXkm, maxPas, vMax, kindProp);
+        super(id, maxFuel, costXkm, maxPas, vMax, kindProp,"Silver");
     }
 
     public SilverAircraft() {
     }
-    
-    
-    @Override
-    public String toString(){ 
-        return "Los datos del avion son:\nCategoría:"+categ+" \nId:"+id+"\nCapacidad máxima de combustible: "+maxFuel+"\nCosto por km de vuelo: "+costXkm+"\nCapacidad máxima de pasajeros: "+maxPas+"\nVelocidad máxima: "+vMax+"\nTipo de propulsión: "+kindProp;
+
+    public void setCategory(String category) {
+        this.category = category;
     }
+
+    public String getCategory() {
+        return category;
+    }
+
+    
 
     public String getId() {
         return id;
@@ -64,7 +70,15 @@ public class SilverAircraft extends Aircraft{
     public void setKindProp(Kind kindProp) {
         this.kindProp = kindProp;
     }
-   
-
+  
+    @Override
+    public String toString(){ 
+        return "Categoría:"+category+" \nId:"+id+"\nCapacidad máxima de combustible: "+maxFuel+"\nCosto por km de vuelo: "+costXkm+"\nCapacidad máxima de pasajeros: "+maxPas+"\nVelocidad máxima: "+vMax+"\nTipo de propulsión: "+kindProp;
+    }
+    @Override
+    public String userString(){
+    return "Categoría:"+category+" \nId:"+id+"\nCapacidad máxima de pasajeros: "+maxPas;
+    }
 }
+
 

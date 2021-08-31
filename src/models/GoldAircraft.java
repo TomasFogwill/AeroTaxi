@@ -1,13 +1,26 @@
 package models;
 
+import java.util.Locale;
+
 
 public class GoldAircraft extends Aircraft{
+    public final String category="Gold";
     String conContWifi;
-    private final String categ="Gold";
+
     public GoldAircraft(String conContWifi, String id, float maxFuel, float costXkm, int maxPas, float vMax, Kind kindProp) {
-        super(id, maxFuel, costXkm, maxPas, vMax, kindProp);
+        super(id, maxFuel, costXkm, maxPas, vMax, kindProp,"Gold");
         this.conContWifi = conContWifi;
     }
+
+    
+
+    public GoldAircraft() {
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
 
     public String getConContWifi() {
         return conContWifi;
@@ -65,12 +78,19 @@ public class GoldAircraft extends Aircraft{
         this.kindProp = kindProp;
     }
 
-    public GoldAircraft() {
-    }
-  
+    
+
+
+    
     
 @Override
     public String toString() {
-        return "Los datos del avion son:\nCategoría: "+categ+"\nId:"+id+"\nCapacidad máxima de combustible: "+maxFuel+"\nCosto por km de vuelo: "+costXkm+"\nCapacidad máxima de pasajeros: "+maxPas+"\nVelocidad máxima: "+vMax+"\nTipo de propulsión: "+kindProp+"\nWiFi continuo: "+conContWifi;
+        return "Categoría: "+category+"\nId:"+id+"\nCapacidad máxima de combustible: "+maxFuel+"\nCosto por km de vuelo: "+costXkm+"\nCapacidad máxima de pasajeros: "+maxPas+"\nVelocidad máxima: "+vMax+"\nTipo de propulsión: "+kindProp+"\nWiFi continuo: "+conContWifi;
     }
+
+@Override
+public String userString(){
+    return "Categoría:"+category+" \nId:"+id+"\nCapacidad máxima de pasajeros: "+maxPas+"\nWiFi continuo: "+conContWifi;
+    }
+
 }

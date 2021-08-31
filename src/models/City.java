@@ -1,7 +1,7 @@
 
 package models;
 
-public enum City{
+public enum City {
     CORDOBA,
     BUENOS_AIRES,
     SANTIAGO_DE_CHILE,

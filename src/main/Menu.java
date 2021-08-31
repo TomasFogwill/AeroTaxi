@@ -12,7 +12,7 @@ public abstract class Menu {
     System.out.println("//Bienvenido al servicio de gestión de vuelos//\n///////////////////////////////////////////////");
     User user=Executive.initial();
     if(Objects.isNull(user)){
-    }else if("admin".equals(user.getName())&&"0000".equals(user.getId())){
+    }else if("scanner=new".equals(user.getName())&&"codigo numerico".equals(user.getId())){
     Menu.menuAdmin();
     }else {    
     Menu.menu(user);
@@ -23,26 +23,15 @@ public abstract class Menu {
        Scanner entradaMenu=new Scanner(System.in);
        boolean verif=false;
        System.out.println("\n//Bienvenido,"+user.getName()+"//");
-       System.out.println("1.Contratar un vuelo\n2.Consultar vuelo\n3.Cancelar vuelo\n4.Administrador\n5.Registrar usuario nuevo\n6.Salir");
+       System.out.println("1.Contratar un vuelo\n2.Consultar o cancelar vuelo\n3.Salir");
        do{System.out.print("Ingrese la opción deseada: ");
        String opcion=entradaMenu.nextLine();
        switch(opcion){
-           case "1":Executive.contract(user);
-               verif=true;
+           case "1":Executive.newFlightByMenu(user);            
                break;
-           case "2":
-               verif=true;
+           case "2":Executive.consultFlight(user);
                break;
            case "3":
-               verif=true;
-               break;
-           case "4":
-               verif=true;
-               break;
-           case "5":
-               verif=true;
-               break;
-           case "6":
                verif=true;
                break;
            default: System.out.println("La opción ingresada no es válida");
@@ -53,18 +42,27 @@ public abstract class Menu {
        
        
    public static void menuAdmin(){
-       System.out.println("///////////////////AEROTAXI////////////////////");
-    System.out.println("//Bienvenido al menú de administrador//\n///////////////////////////////////////////////");
-       System.out.println("Seleccione la opción deseada");
-       System.out.println("Vamos a agregar aviones: ");
-       Admin.addAircraft();
-//agregar avión al sistema
-   //consultar todas los vuelos en una fecha dada
-   //listar todos los clientes indicando todos sus datos personales
-   //,mejor categoría usada y el total gastado de los vuelos
+       Scanner scanner=new Scanner(System.in);
+       boolean verif=false;
+       do{System.out.println("///////////////////AEROTAXI////////////////////");
+       System.out.println("//Bienvenido al menú de administrador//\n///////////////////////////////////////////////");
+       System.out.println("1.Agregar un nuevo avión al sistema\n2.Consultar vuelos por fecha\n3.Información clientes\n4.Salir");
+       System.out.print("Ingrese la opción deseada: ");
+       String v=scanner.nextLine();
+       switch(v){
+           case "1":Admin.newAircraft();              
+               break;
+           case "2":Admin.flightList();
+               break;
+           case "3":Admin.userList();
+               break;
+           case "4": verif=true;
+           break;
+           default:
+               break;     
+       }
+       }while(verif==false);
    }
-   
-   
    }
     
 

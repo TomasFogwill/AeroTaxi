@@ -8,11 +8,24 @@ import models.BronzeAircraft;
 import models.GoldAircraft;
 import models.Kind;
 import models.SilverAircraft;
+import models.User;
 
 
 public abstract class Admin {
     
-    public static void addAircraft(){
+    public static User user(){
+        User user=null;
+        Scanner scanner=new Scanner(System.in);
+        System.out.print("Ingrese el código: ");
+        String code=scanner.nextLine();
+        if("1234".equals(code)){
+        user=new User("scanner=new","","codigo numerico",5000);
+        return user;
+        }
+      return user;
+    }
+    
+    public static void newAircraft(){
     Aircraft a = null;
     Scanner scanner=new Scanner(System.in);
     boolean verif0=false;
@@ -23,9 +36,19 @@ public abstract class Admin {
           scanner.nextLine();
       }else{
       id=scanner.nextLine();
+      Aircraft[] b=Persistence.getAircrafts();
+      int t=0;
+      for(int i=0;i<b.length;i++){
+      if(id==b[i].getId()){
+      t++;    
+      }    
+      }
+      if(t==0){
       verif0=true;
+      }else{
+          System.out.println("El código ingresado ya existe, vuelva a intentarlo");    
       }  
-    }while(verif0==false);
+    }}while(verif0==false);
         float maxFuel = 0;
         boolean verif1=false;
         do{System.out.print("Ingrese la capacidad de combustible del avión: ");
