@@ -1,6 +1,8 @@
 package main;
 
 import dao.Persistence;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 import models.Aircraft;
@@ -16,58 +18,31 @@ public abstract class Admin {
     public static Scanner scanner = new Scanner(System.in);
 
     public static User user() {
-        User user = new User();
+        User user = null;
         Scanner scanner = new Scanner(System.in);
         System.out.print("Ingrese el código: ");
         String code = scanner.nextLine();
         if ("1234".equals(code)) {
-            user = new User("scanner=new", "", "codigo numerico", 5000);
-            return user;
+            user = new User("1234","1234","1234",1234);
         }
         return user;
     }
 
     public static void newAircraft() {
-        Aircraft aircraft = null;
+        Aircraft aircraft = Admin.setAircraftClass();     
         Admin.setAircraftId(aircraft);
         Admin.setAircraftMaxFuel(aircraft);
         Admin.setAircraftCostXkm(aircraft);
         Admin.setAircraftMaxPas(aircraft);
         Admin.setAircraftMaxV(aircraft);
-        Admin.setAircraftKindOfProp(aircraft);
-        aircraft = Admin.setAircraftClass(aircraft);
+        Admin.setAircraftKindOfProp(aircraft);        
         Admin.confirmAircraft(aircraft);
     }
 
     public static void setAircraftId(Aircraft aircraft) {
-        boolean flag = false;
-        String id = new String();
-        do {
-            System.out.print("Ingrese un código numérico de identificación: ");
-            if (!scanner.hasNextInt()) {
-                System.out.println("No ha ingresado un número válido");
-                scanner.nextLine();
-            } else {
-                id = scanner.nextLine();
-                if (isThisIdAvailable(id)) {
-                    flag = true;
-                } else {
-                    System.out.println("El código ingresado ya existe");
-                }
-            }
-        } while (flag == false);
+        String id=String.valueOf(Aircraft.getIdCounter());
+        Aircraft.setIdCounter(Aircraft.getIdCounter()+1);
         aircraft.setId(id);
-    }
-
-    public static boolean isThisIdAvailable(String id) {
-        boolean available = true;
-        Aircraft[] aircrafts = Persistence.getAircrafts();
-        for (int i = 0; i < aircrafts.length; i++) {
-            if (id == aircrafts[i].getId()) {
-                available = false;
-            }
-        }
-        return available;
     }
 
     public static void setAircraftMaxFuel(Aircraft aircraft) {
@@ -168,43 +143,26 @@ public abstract class Admin {
         aircraft.setKindProp(kindProp);
     }
 
-    public static Aircraft setAircraftClass(Aircraft aircraft) {
+    public static Aircraft setAircraftClass() {
+        Aircraft aircraft = null;
         boolean flag1 = false;
-        System.out.println("A continuación se le muestran las categorías posibles de avión ");
+        System.out.println("\nA continuación se le muestran las categorías posibles de avión ");
         do {
             System.out.println("1.Bronze\n2.Silver\n3.Gold");
             System.out.print("Ingrese el número correspondiente: ");
             String input = scanner.nextLine();
             switch (input) {
                 case "1":
-                    aircraft = new BronzeAircraft(aircraft.getId(), aircraft.getMaxFuel(), aircraft.getCostXkm(), aircraft.getMaxPas(), aircraft.getvMax(), aircraft.getKindProp());
+                    aircraft = new BronzeAircraft();
                     flag1 = true;
                     break;
                 case "2":
-                    aircraft = new SilverAircraft(aircraft.getId(), aircraft.getMaxFuel(), aircraft.getCostXkm(), aircraft.getMaxPas(), aircraft.getvMax(), aircraft.getKindProp());
+                    aircraft = new SilverAircraft();
                     flag1 = true;
                     break;
                 case "3":
-                    boolean flag2 = false;
-                    String u;
-                    System.out.println("¿El avión posee conexión continua de Wifi?\n1.Si\n2.No");
-                    do {
-                        System.out.print("Ingrese la opción correcta: ");
-                        u = scanner.nextLine();
-                        switch (u) {
-                            case "1":
-                                aircraft = new GoldAircraft("Si", aircraft.getId(), aircraft.getMaxFuel(), aircraft.getCostXkm(), aircraft.getMaxPas(), aircraft.getvMax(), aircraft.getKindProp());
-                                flag2 = true;
-                                break;
-                            case "2":
-                                aircraft = new GoldAircraft("No", aircraft.getId(), aircraft.getMaxFuel(), aircraft.getCostXkm(), aircraft.getMaxPas(), aircraft.getvMax(), aircraft.getKindProp());
-                                flag2 = true;
-                                break;
-                            default:
-                                System.out.println("No ingreso una opción válida");
-                                break;
-                        }
-                    } while (flag2 = false);
+                    aircraft = new GoldAircraft();
+                    Admin.setGoldAircraftWiFi((GoldAircraft) aircraft);
                     flag1 = true;
                     break;
                 default:
@@ -215,10 +173,33 @@ public abstract class Admin {
         return aircraft;
     }
 
+    public static void setGoldAircraftWiFi(GoldAircraft aircraft) {
+        boolean flag = false;
+        String input;
+        System.out.println("¿El avión posee conexión continua de Wifi?\n1.Si\n2.No");
+        do {
+            System.out.print("Ingrese la opción correcta: ");
+            input = scanner.nextLine();
+            switch (input) {
+                case "1":
+                    aircraft.setConContWifi("Si");
+                    flag = true;
+                    break;
+                case "2":
+                    aircraft.setConContWifi("No");
+                    flag = true;
+                    break;
+                default:
+                    System.out.println("No ingreso una opción válida");
+                    break;
+            }
+        } while (flag = false);
+    }
+
     public static void confirmAircraft(Aircraft aircraft) {
         boolean flag = false;
         String input;
-        System.out.println(aircraft.toString());
+        System.out.println("\n" + aircraft.toString());
         do {
             System.out.println("¿Confirmar y guardar?\n1.Si\n2.No");
             input = scanner.nextLine();
@@ -235,17 +216,33 @@ public abstract class Admin {
                 default:
                     System.out.println("No ha ingresado una opción válida");
                     break;
-
             }
         } while (flag = false);
     }
 
     public static void flightList() {
-        Flight[] flights = Persistence.getFlights();
-        for (int i = 0; i < flights.length; i++) {
-            System.out.println(flights[i].toString());
+        boolean flag = false;
+        LocalDate date = LocalDate.now();
+        do {
+            System.out.print("Ingrese la fecha a consultar de la siguiente forma dd/mm/yyyy: ");
+            String inputDate = scanner.nextLine();
+            try {
+                date = LocalDate.parse(inputDate, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                flag = true;
+            } catch (java.time.format.DateTimeParseException ex) {
+                System.out.println("La fecha no fue ingresada correctamente");
+            }
+        } while (flag == false);
+        ArrayList<Flight> flights = Persistence.getFlightByDate(date);
+        if (flights.isEmpty()) {
+            System.out.println("No hay vuelos para mostrar");
+        } else {
+            for (Flight i : flights) {
+                System.out.println(i.toString());
+            }
+            System.out.println("Esta es la lista de vuelos");
         }
-        System.out.println("Esta es la lista de vuelos");
+
     }
 
     public static void userList() {

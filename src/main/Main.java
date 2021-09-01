@@ -24,7 +24,7 @@ import models.User;
 public abstract class Main {
    
 public static void main(String[] args) throws JsonProcessingException, IOException  {
-Flight flight1=new Flight();
+//Flight flight1=new Flight();
 //User user1=new User();
 //User user=new User("Tomas","Fogwill","40129369",24);
    // Executive.newFlight(user); 
@@ -60,7 +60,11 @@ Flight flight1=new Flight();
 //aircraft2[aircraft1.length]=aircraft;
 //LocalDate date1=LocalDate.now();
 //    System.out.println(date.until(date1,ChronoUnit.DAYS));
-
+//String id="pepito";
+//Executive.isUserIdAvailable(id);
+Menu.first();
+//User user=new User();
+//    System.out.println(user.getId());
 }
 
 }

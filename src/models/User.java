@@ -46,6 +46,30 @@ public class User {
     public String getBest() {
         return best;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setFlightTot(float flightTot) {
+        this.flightTot = flightTot;
+    }
+
+    public void setBest(String best) {
+        this.best = best;
+    }
     
     
          
@@ -57,7 +81,7 @@ public class User {
 //BORRAR O MODIFICAR DESPUES, SOLO PARA PRUEBAS
     @Override
     public String toString() {
-        return "Usuario{" + "nombre=" + name + ", apellido=" + surname + ", dni=" + id + ", edad=" + age + ", totalVuelos=" + flightTot + ", mejorCateg=" + best + '}';
+        return "Usuario{ Nombre = " + name + " Apellido = " + surname + " DNI = " + id + " Edad = " + age + " Gasto total de vuelos = " + flightTot + " Mejor categoría de vuelo = " + best + "}";
     }
     
    

@@ -23,6 +23,15 @@ public abstract class Aircraft {
     protected float vMax;// velocidad máx en km/h
     protected Kind kindProp;// tipo de motor de propulsión
     protected String category;
+    protected static long idCounter;
+
+    public static long getIdCounter() {
+        return idCounter;
+    }
+
+    public static void setIdCounter(long idCounter) {
+        Aircraft.idCounter = idCounter;
+    }
     
 
     public Aircraft() {

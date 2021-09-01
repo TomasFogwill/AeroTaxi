@@ -16,33 +16,34 @@ import models.User;
 
 public abstract class Persistence {
 
+    public static File usersFile = new File("src/dao/data/Users.json");
+    public static File aircraftsFile = new File("src/dao/data/Aircrafts.json");
+    public static File flightsFile = new File("src/dao/data/Flights.json");
+    public static ObjectMapper mapper = new ObjectMapper();
+
     public static void saveNewUser(User user) {
-        File file = new File("src/dao/data/Users.json");
-        ObjectMapper mapper = new ObjectMapper();
-        ArrayList<User> users = Persistence.getUsers();
+        ArrayList<User> users=Persistence.getUsers();
         users.add(user);
         try {
-            mapper.writeValue(file, users);
+            mapper.writeValue(usersFile, users);
         } catch (IOException ex) {
             System.out.println("Algo ha salido mal, contactese con el administrador");
         }
     }
 
     public static ArrayList<User> getUsers() {
-        ObjectMapper mapper = new ObjectMapper();
-        ArrayList<User> users = new ArrayList<User>();
-        File file = new File("src/dao/data/Users.json");
-        if (file.exists()) {
+       ArrayList<User> users=new ArrayList<>(); 
+        if (usersFile.exists()) {
             try {
-                users = mapper.readValue(file, new TypeReference<ArrayList<User>>() {
+                users = mapper.readValue(usersFile, new TypeReference<ArrayList<User>>() {
                 });
             } catch (IOException ex) {
                 System.out.println("Algo ha salido mal, contactese con administración");
             }
         } else {
             try {
-                file.createNewFile();
-                mapper.writeValue(file, users);
+                usersFile.createNewFile();
+                mapper.writeValue(usersFile, users);
             } catch (IOException ex) {
                 System.out.println("Algo ha salido mal, contactese con administración");
             }
@@ -51,35 +52,31 @@ public abstract class Persistence {
     }
 
     public static void saveNewAircraft(Aircraft aircraft) {
-        File file = new File("src/dao/data/Aircrafts.json");
-        ObjectMapper mapper = new ObjectMapper();
-        Aircraft[] aircrafts = Persistence.getAircrafts();
-        Aircraft[] aircrafts1 = new Aircraft[aircrafts.length + 1];
+        Aircraft[] aircrafts=Persistence.getAircrafts();
+        Aircraft[] aircrafts1=new Aircraft[aircrafts.length+1];
         for (int i = 0; i < aircrafts.length; i++) {
             aircrafts1[i] = aircrafts[i];
         }
         aircrafts1[aircrafts.length] = aircraft;
         try {
-            mapper.writeValue(file, aircrafts1);
+            mapper.writeValue(aircraftsFile, aircrafts1);
         } catch (IOException ex) {
             System.out.println("Algo ha salido mal");
         }
     }
 
     public static Aircraft[] getAircrafts() {
-        ObjectMapper mapper = new ObjectMapper();
         Aircraft[] aircrafts = new Aircraft[0];
-        File file = new File("src/dao/data/Aircrafts.json");
-        if (file.exists()) {
+        if (aircraftsFile.exists()) {
             try {
-                aircrafts = mapper.readValue(file, Aircraft[].class);
+                aircrafts = mapper.readValue(aircraftsFile, Aircraft[].class);
             } catch (IOException ex) {
                 System.out.println("Algo ha salido mal, contactese con administración");
             }
         } else {
             try {
-                file.createNewFile();
-                mapper.writeValue(file, aircrafts);
+                aircraftsFile.createNewFile();
+                mapper.writeValue(aircraftsFile, aircrafts);
             } catch (IOException ex) {
                 System.out.println("Algo ha salido mal");
             }
@@ -89,39 +86,35 @@ public abstract class Persistence {
     }
 
     public static void saveNewFlight(Flight flight) {
-        File file = new File("src/dao/data/Flights.json");
-        ObjectMapper mapper = new ObjectMapper();
+        Flight[] flights=Persistence.getFlights();
+        Flight[] flights1=new Flight[flights.length+1];         
         mapper.registerModule(new JavaTimeModule());
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        Flight[] flights = Persistence.getFlights();
-        Flight[] flights1 = new Flight[flights.length + 1];
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);;
         for (int i = 0; i < flights.length; i++) {
             flights1[i] = flights[i];
         }
         flights1[flights.length] = flight;
         try {
-            mapper.writeValue(file, flights1);
+            mapper.writeValue(flightsFile, flights1);
         } catch (IOException ex) {
             System.out.println("Algo ha salido mal");
         }
     }
 
     public static Flight[] getFlights() {
-        ObjectMapper mapper = new ObjectMapper();
+        Flight[] flights = new Flight[0];
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        Flight[] flights = new Flight[0];
-        File file = new File("src/dao/data/Flights.json");
-        if (file.exists()) {
+        if (flightsFile.exists()) {
             try {
-                flights = mapper.readValue(file, Flight[].class);
+                flights = mapper.readValue(flightsFile, Flight[].class);
             } catch (IOException ex) {
                 System.out.println("Algo ha salido mal, contactese con administración");
             }
         } else {
             try {
-                file.createNewFile();
-                mapper.writeValue(file, flights);
+                flightsFile.createNewFile();
+                mapper.writeValue(flightsFile, flights);
             } catch (IOException ex) {
                 System.out.println("Algo ha salido mal");
             }
@@ -131,20 +124,20 @@ public abstract class Persistence {
     }
 
     public static ArrayList<Flight> getFlightByDate(LocalDate date) {
-        Flight[] flights = Persistence.getFlights();
-        ArrayList<Flight> flights1 = new ArrayList<Flight>();
+        ArrayList<Flight> flightsList = new ArrayList<Flight>();
+                Flight[] flights = Persistence.getFlights();
         for (int i = 0; i < flights.length; i++) {
             if (flights[i].getDate() == date) {
-                flights1.add(flights[i]);
+                flightsList.add(flights[i]);
             }
         }
-        return flights1;
+        return flightsList;
     }
 
     public static ArrayList<Aircraft> getAvailableAircraft(LocalDate date) {
-        ArrayList<Flight> flights = Persistence.getFlightByDate(date);//[]  
-        ArrayList<Aircraft> notAv = new ArrayList<Aircraft>();//[]
-        ArrayList<Aircraft> available = new ArrayList<Aircraft>();//[]
+        ArrayList<Flight> flights = Persistence.getFlightByDate(date);
+        ArrayList<Aircraft> notAv = new ArrayList<Aircraft>();
+        ArrayList<Aircraft> available = new ArrayList<Aircraft>();
         Aircraft[] aircrafts = Persistence.getAircrafts();
         for (Flight i : flights) {
             notAv.add(i.getAircraft());
@@ -159,7 +152,7 @@ public abstract class Persistence {
 
     public static ArrayList<Flight> getFlightByUser(User user) {
         Flight[] flights = Persistence.getFlights();
-        ArrayList<Flight> userFlights = new ArrayList<Flight>();
+        ArrayList<Flight> userFlights = new ArrayList<>();
         for (int i = 0; i < flights.length; i++) {
             if (flights[i].getUser() == user) {
                 userFlights.add(flights[i]);
@@ -169,9 +162,9 @@ public abstract class Persistence {
     }
 
     public static void deleteFlight(Flight flight) {
+        Flight[] flights = Persistence.getFlights();
         boolean flag = false;
         int place = 0;
-        Flight[] flights = Persistence.getFlights();
         for (int i = 0; i < flights.length; i++) {
             if (flight == flights[i]) {
                 flag = true;
@@ -193,14 +186,21 @@ public abstract class Persistence {
     }
 
     public static void saveNewFlightList(Flight[] flights) {
-        File file = new File("src/dao/data/Flights.json");
-        ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         try {
-            mapper.writeValue(file, flights);
+            mapper.writeValue(flightsFile, flights);
         } catch (IOException ex) {
             System.out.println("Algo ha salido mal");
         }
     }
+
+    public static void saveNewUserList(ArrayList<User> users) {
+        try {
+            mapper.writeValue(usersFile, users);
+        } catch (IOException ex) {
+            System.out.println("Algo ha salido mal");
+        }
+    }
+
 }

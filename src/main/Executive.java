@@ -19,24 +19,87 @@ public class Executive {
 
     public static Scanner scanner = new Scanner(System.in);
 
+    public static User initial() {
+        boolean flag = false;
+        User user = null;
+        do {
+            System.out.println("\n1.Iniciar sesión\n2.Registrarse\n3.Salir");
+            System.out.print("Seleccione la opcion correspondiente: ");
+            String input = scanner.nextLine();
+            switch (input) {
+                case "1":
+                    user = Executive.logIn();
+                    if (user != null) {
+                        flag = true;
+                    } else {
+                        System.out.println("\nEl DNI ingresado no está registrado");
+                    }
+                    break;
+                case "2":
+                    user = Executive.register();
+                    if (user != null) {
+                        flag = true;
+                    }
+                    break;
+                case "3":
+                    flag = true;
+                    break;
+                case "administration":
+                    user = Admin.user();
+                    if (user != null) {
+                        flag = true;
+                    } else {
+                        System.out.println("Opcion inválida");
+                    }
+                    break;
+                default:
+                    System.out.println("\nLa opcion ingresada no es válida\n");
+                    break;
+            }
+        } while (flag == false);
+        return user;
+    }
+
     public static User logIn() {
         ArrayList<User> users = Persistence.getUsers();
         User user = new User();
         System.out.print("Ingrese su DNI para iniciar sesión: ");
         String id = scanner.nextLine();
+        user = Executive.getUserById(id);
+        return user;
+    }
+
+    public static User getUserById(String id) {
+        ArrayList<User> users = Persistence.getUsers();
+        User user =null;
         for (int i = 0; i < users.size(); i++) {
             if (users.get(i).getId().equals(id)) {
                 user = users.get(i);
             }
-        }      
+        }
         return user;
     }
 
     public static User register() {
-        String id = null;
-        int age = 0;
         System.out.println("Vamos a registrar su usuario");
-        boolean verifR = false;
+        User user = new User();
+        user.setBest("Ninguna");
+        user.setFlightTot(0);
+        Executive.setUserId(user);
+        if (user.getId()!=null) {
+            Executive.setUserName(user);
+            Executive.setUserSurname(user);
+            Executive.setUserAge(user);
+            Persistence.saveNewUser(user);
+        } else {
+            user = null;
+        }
+        return user;
+    }
+
+    public static void setUserId(User user) {
+        boolean flag = false;
+        String id = new String();
         do {
             System.out.print("Ingrese su DNI: ");
             if (!scanner.hasNextInt()) {
@@ -44,26 +107,70 @@ public class Executive {
                 scanner.nextLine();
             } else {
                 id = scanner.nextLine();
-                ArrayList<User> users = Persistence.getUsers();
-                int a = 0;
-                for (int i = 0; i < users.size(); i++) {
-                    if (id.equals(users.get(i).getId())) {
-                        a++;
-                    }
-                }
-                if (a == 0) {
-                    verifR = true;
-                } else {
-                    System.out.println("Ya se encuentra un usuario registrado con ese DNI,vuelva a intentarlo");
-                    return null;
-                }
+                boolean available=Executive.isUserIdAvailable(id);
+                if (!available) {
+                    boolean ask = Executive.askUserNewId();
+                    if (!ask) {
+                        user.setId(null);
+                        flag = true;
+                    }}else{
+                    flag=true;
+                    user.setId(id);
+                    }                            
+        }} while (flag == false);
+    }
+
+    public static boolean isUserIdAvailable(String id) {
+        boolean available = true;
+        ArrayList<User> users = Persistence.getUsers();
+        for (User i : users) {
+            if (id.equals(i.getId())) {
+                available = false;
             }
-        } while (verifR == false);
+        }
+        if (available == false) {
+            System.out.println("El DNI ya está registrado con otro usuario");
+        }
+        return available;
+    }
+
+    public static boolean askUserNewId() {
+        boolean answer = false;
+        boolean flag = false;
+        String input = new String();
+        do {
+            System.out.println("1.Volver atras\n2.Ingresar otro DNI");
+            input = scanner.nextLine();
+            switch (input) {
+                case "1":
+                    flag = true;
+                    break;
+                case "2":
+                    flag = true;
+                    answer = true;
+                    break;
+                default:
+                    break;
+            }
+        } while (flag == false);
+        return answer;
+    }
+
+    public static void setUserName(User user) {
         System.out.print("Ingrese su nombre: ");
         String name = scanner.nextLine();
+        user.setName(name);
+    }
+
+    public static void setUserSurname(User user) {
         System.out.print("Ingrese su apellido: ");
         String surname = scanner.nextLine();
-        boolean verifR2 = false;
+        user.setSurname(surname);
+    }
+
+    public static void setUserAge(User user) {
+        boolean flag = false;
+        int age = 0;
         do {
             System.out.print("Ingrese su edad: ");
             if (!scanner.hasNextInt()) {
@@ -71,48 +178,10 @@ public class Executive {
                 scanner.nextLine();
             } else {
                 age = scanner.nextInt();
-                verifR2 = true;
+                flag = true;
             }
-        } while (verifR2 == false);
-        User user = new User(name, surname, id, age);
-        Persistence.saveNewUser(user);
-        return user;
-    }
-
-    public static User initial() {
-        boolean verif = false;
-        do {
-            System.out.println("\n1.Iniciar sesión\n2.Registrarse\n3.Salir");
-            System.out.print("Seleccione la opcion correspondiente: ");
-            String var = scanner.nextLine();
-            switch (var) {
-                case "1":
-                    User user1 = Executive.logIn();
-                    if (user1 == null) {
-                        System.out.println("No se ha podido iniciar sesión");
-                        break;
-                    } else {
-                        return user1;
-                    }
-                case "2":
-                    User user2 = Executive.register();
-                    if (user2 == null) {
-                        System.out.println("No se ha podido registrar al usuario");
-                        break;
-                    } else {
-                        return user2;
-                    }
-                case "3":
-                    return null;
-                case "administration":
-                    User user3 = Admin.user();
-                    return user3;
-                default:
-                    System.out.println("\nLa opcion ingresada no es válida\n");
-                    break;
-            }
-        } while (verif == false);
-        return null;
+        } while (flag == false);
+        user.setAge(age);
     }
 
     public static void newFlightByMenu(User user) {
@@ -145,18 +214,23 @@ public class Executive {
 
     public static void setFlightDateByMenu(Flight flight) {
         boolean flag = false;
-        LocalDate d = LocalDate.now();
+        LocalDate today = LocalDate.now();
+        LocalDate flightDate = LocalDate.now();
         do {
             System.out.print("Ingrese la fecha a viajar de la siguiente forma dd/mm/yyyy: ");
-            String dates = scanner.nextLine();
+            String inputDate = scanner.nextLine();
             try {
-                d = LocalDate.parse(dates, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                flag = true;
+                flightDate = LocalDate.parse(inputDate, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
             } catch (java.time.format.DateTimeParseException ex) {
                 System.out.println("La fecha no fue ingresada correctamente");
             }
+          if(today.until(flightDate,ChronoUnit.DAYS) < 0){
+              System.out.println("No puede gestionar un vuelo en el pasado...");
+          }else{
+              flag=true;
+          }  
         } while (flag == false);
-        flight.setDate(d);
+        flight.setDate(flightDate);
 
     }
 
@@ -325,6 +399,7 @@ public class Executive {
                 case "1":
                     flight.setIdByMenu();
                     Persistence.saveNewFlight(flight);
+                    Executive.setUserNewData(flight);
                     System.out.println("El vuelo se a confirmado");
                     flag = true;
                     break;
@@ -339,12 +414,45 @@ public class Executive {
         } while (flag == false);
     }
 
+    public static void setUserNewData(Flight flight) {
+        ArrayList<User> users = Persistence.getUsers();
+        String category = flight.getAircraft().getCategory();
+        float cost = flight.getCost();
+        User user = flight.getUser();
+        users.remove(user);
+        Executive.setUserBestCategory(user, category);
+        Executive.setUserTotalFlight(user, cost);
+        users.add(user);
+        Persistence.saveNewUserList(users);
+    }
 
-    
+    public static void setUserBestCategory(User user, String flightCategory) {
+        String actualCategory = user.getBest();
+        if ("Bronce".equals(flightCategory)) {
+            if ("Ninguna".equals(actualCategory)) {
+                user.setBest(flightCategory);
+            }
+        }
+        if ("Silver".equals(flightCategory)) {
+            if ("Ninguna".equals(actualCategory) || "Bronce".equals(actualCategory)) {
+                user.setBest(flightCategory);
+            }
+        }
+        if ("Gold".equals(flightCategory)) {
+            user.setBest(flightCategory);
+        }
+    }
+
+    public static void setUserTotalFlight(User user, float cost) {
+        float totalFlight = user.getFlightTot() + cost;
+        user.setFlightTot(totalFlight);
+    }
+
     public static void consultFlight(User user) {
         boolean flag = false;
         String answer;
-        Executive.getUserFlightListByMenu(user);
+        boolean areFlights=Executive.getUserFlightListByMenu(user);
+        if(areFlights==true){
         do {
             System.out.println("¿Desea cancelar alguno?\n1.Si\n2.No");
             answer = scanner.nextLine();
@@ -353,93 +461,105 @@ public class Executive {
                     Executive.deleteFlightByMenu(user);
                     flag = true;
                     break;
-                case "2": System.out.println("Nada será cancelado");
+                case "2":
+                    System.out.println("Nada será cancelado");
                     flag = true;
                     break;
                 default:
                     System.out.println("No ha ingresado una opcion válida");
                     break;
             }
+        } while (flag == false);}
+    }
+
+    public static boolean getUserFlightListByMenu(User user) {
+        boolean areFlights=false;
+        ArrayList<Flight> userFlights = Persistence.getFlightByUser(user);
+        if(userFlights.isEmpty()){
+            System.out.println("No hay vuelos para mostrar");
+        }else{
+        for (Flight i : userFlights) {
+            System.out.println(i);
+        }
+        System.out.println("Estos son los vuelos confirmados");
+        areFlights=true;
+        }
+    return areFlights;    
+    }
+
+    public static void deleteFlightByMenu(User user) {
+        ArrayList<Flight> userFlights = Persistence.getFlightByUser(user);
+        Flight flight = Executive.getFlightByMenu(userFlights);
+        if (!(flight == new Flight())) {
+            boolean flag = Executive.canDeleteFlight(flight);
+            if (flag == true) {
+                Executive.confirmDeleteFlight(flight);
+            }
+        }
+    }
+
+    public static Flight getFlightByMenu(ArrayList<Flight> flights) {
+        Flight flight = new Flight();
+        boolean flag = false;
+        do {
+            System.out.println("Ingrese el ID del vuelo a cancerlar, o Enter para volver atras");
+            String id;
+            id = scanner.nextLine();
+            switch (id) {
+                case "":
+                    System.out.println("Se ha cancelado la operacion");
+                    flag = true;
+                    break;
+                default:
+                    for (Flight i : flights) {
+                        if (id.equals(i.getId())) {
+                            flight = i;
+                            flag = true;
+                        }
+                    }
+                    break;
+            }
+            if (flag == false) {
+                System.out.println("La opcion ingresada no es válida");
+            }
+        } while (flag == false);
+        return flight;
+    }
+
+    public static boolean canDeleteFlight(Flight flight) {
+        boolean can = false;
+        LocalDate now = LocalDate.now();
+        LocalDate flightDate = flight.getDate();
+        if (now.until(flightDate, ChronoUnit.DAYS) < 1) {
+            System.out.println("No puede cancelarce un vuelo con menos de 24 horas de anticipación");
+        } else {
+            System.out.println("El vuelo puede cancelarce");
+            can = true;
+        }
+        return can;
+    }
+
+    public static void confirmDeleteFlight(Flight flight) {
+        boolean flag = false;
+        String input;
+        System.out.println("El vuelo seleccionado es el siguiente:\n" + flight.toString());
+        System.out.println("¿Desea cancelarlo?\n1.Si\n2.No");
+        do {
+            input = scanner.nextLine();
+            switch (input) {
+                case "1":
+                    Persistence.deleteFlight(flight);
+                    System.out.println("El vuelo ha sido cancelado");
+                    flag = true;
+                    break;
+                case "2":
+                    System.out.println("El vuelo no se cancelo");
+                    flag = true;
+                    break;
+                default:
+                    System.out.println("No ha ingresado una opción válida");
+                    break;
+            }
         } while (flag == false);
     }
-
-public static void getUserFlightListByMenu(User user){
-ArrayList<Flight> userFlights=Persistence.getFlightByUser(user);
-for(Flight i:userFlights){
-    System.out.println(i);
-}
-    System.out.println("Estos son los vuelos confirmados");
-}
-
-public static void deleteFlightByMenu(User user){
-    ArrayList<Flight> userFlights=Persistence.getFlightByUser(user);
-    Flight flight=Executive.getFlightByMenu(userFlights);
-    if(!(flight==new Flight())){
-    boolean flag=Executive.canDeleteFlight(flight);
-    if(flag==true){
-    Executive.confirmDeleteFlight(flight);
-    }    
-    }    
-}
-
-public static Flight getFlightByMenu(ArrayList<Flight> flights){
-    Flight flight=new Flight();
-    boolean flag=false;
-    do{System.out.println("Ingrese el ID del vuelo a cancerlar, o Enter para volver atras");
-    String id;
-    id=scanner.nextLine();
-    switch(id){
-        case "":
-            System.out.println("Se ha cancelado la operacion");
-            flag=true;
-            break;
-        default:
-    for(Flight i: flights){
-    if(id.equals(i.getId())){
-    flight=i;
-    flag=true;
-    }}    
-break;}
-if(flag==false){
-    System.out.println("La opcion ingresada no es válida");
-}    
-}while(flag==false);
-return flight;
-}
-
-public static boolean canDeleteFlight(Flight flight){
-boolean can=false;
-LocalDate now=LocalDate.now();
-LocalDate flightDate=flight.getDate();
-if(now.until(flightDate,ChronoUnit.DAYS)<1){
-    System.out.println("No puede cancelarce un vuelo con menos de 24 horas de anticipación");
-}else{
-    System.out.println("El vuelo puede cancelarce");    
-can=true;
-}
-return can;
-}
-
-public static void confirmDeleteFlight(Flight flight){
-    boolean flag=false;
-    String input;
-    System.out.println("El vuelo seleccionado es el siguiente:\n"+flight.toString());
-    System.out.println("¿Desea cancelarlo?\n1.Si\n2.No");
-    do{input=scanner.nextLine();
-    switch(input){
-        case "1":
-            Persistence.deleteFlight(flight);
-            System.out.println("El vuelo ha sido cancelado");
-            flag=true;
-            break;
-        case "2":
-            System.out.println("El vuelo no se cancelo");
-            flag=true;
-            break;
-        default:
-            System.out.println("No ha ingresado una opción válida");
-            break;
-    }
-    }while(flag==false);
-}
 }

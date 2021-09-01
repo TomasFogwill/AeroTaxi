@@ -1,1 +1,1 @@
-[{"@type":"BronzeAircraft","id":"747","maxFuel":32423.0,"costXkm":23423.0,"maxPas":34343,"vMax":423423.0,"kindProp":"MOTOR_A_HELICE","category":"Bronce"}]
+[{"@type":"GoldAircraft","id":"0","maxFuel":15000.0,"costXkm":300.0,"maxPas":8,"vMax":900.0,"kindProp":"MOTOR_A_REACCION","category":"Gold","conContWifi":"Si"},{"@type":"BronzeAircraft","id":"1","maxFuel":3000.0,"costXkm":150.0,"maxPas":12,"vMax":900.0,"kindProp":"MOTOR_A_PISTONES","category":"Bronce"}]
