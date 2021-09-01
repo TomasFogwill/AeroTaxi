@@ -1,4 +1,3 @@
-
 package dao;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -17,41 +16,41 @@ import models.User;
 
 public abstract class Persistence {
 
-   public static void saveNewUser(User user){
-   File file=new File("src/dao/data/Users.json");
-   ObjectMapper mapper=new ObjectMapper();
-   ArrayList<User> users=Persistence.getUsers();
-   users.add(user);
-        try{
-        mapper.writeValue(file, users);
+    public static void saveNewUser(User user) {
+        File file = new File("src/dao/data/Users.json");
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayList<User> users = Persistence.getUsers();
+        users.add(user);
+        try {
+            mapper.writeValue(file, users);
         } catch (IOException ex) {
             System.out.println("Algo ha salido mal, contactese con el administrador");
-        }        
-    }        
-    
-    
-    public static ArrayList<User> getUsers(){
-    ObjectMapper mapper=new ObjectMapper(); 
-    ArrayList<User> users = new ArrayList<User>();    
-    File file=new File("src/dao/data/Users.json");
-    if(file.exists()){
-        try{
-            users=mapper.readValue(file, new TypeReference<ArrayList<User>>(){});
-        } catch (IOException ex) {
-            System.out.println("Algo ha salido mal, contactese con administración");
-        }     
-       }else{
-        try {
-            file.createNewFile();
-            mapper.writeValue(file,users);
-        } catch (IOException ex) {
-            System.out.println("Algo ha salido mal, contactese con administración");
         }
     }
-       return users;
+
+    public static ArrayList<User> getUsers() {
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayList<User> users = new ArrayList<User>();
+        File file = new File("src/dao/data/Users.json");
+        if (file.exists()) {
+            try {
+                users = mapper.readValue(file, new TypeReference<ArrayList<User>>() {
+                });
+            } catch (IOException ex) {
+                System.out.println("Algo ha salido mal, contactese con administración");
+            }
+        } else {
+            try {
+                file.createNewFile();
+                mapper.writeValue(file, users);
+            } catch (IOException ex) {
+                System.out.println("Algo ha salido mal, contactese con administración");
+            }
+        }
+        return users;
     }
-    
-   public static void saveNewAircraft(Aircraft aircraft){
+
+    public static void saveNewAircraft(Aircraft aircraft) {
         File file = new File("src/dao/data/Aircrafts.json");
         ObjectMapper mapper = new ObjectMapper();
         Aircraft[] aircrafts = Persistence.getAircrafts();
@@ -66,73 +65,70 @@ public abstract class Persistence {
             System.out.println("Algo ha salido mal");
         }
     }
-     
-    public static Aircraft[] getAircrafts(){
-    ObjectMapper mapper=new ObjectMapper(); 
-    Aircraft[] aircrafts =new Aircraft[0];
-    File file=new File("src/dao/data/Aircrafts.json");
-    if(file.exists()){
-        try{
-            aircrafts=mapper.readValue(file,Aircraft[].class);
-        } catch (IOException ex) {
-            System.out.println("Algo ha salido mal, contactese con administración");
-        }     
-       }else{
+
+    public static Aircraft[] getAircrafts() {
+        ObjectMapper mapper = new ObjectMapper();
+        Aircraft[] aircrafts = new Aircraft[0];
+        File file = new File("src/dao/data/Aircrafts.json");
+        if (file.exists()) {
+            try {
+                aircrafts = mapper.readValue(file, Aircraft[].class);
+            } catch (IOException ex) {
+                System.out.println("Algo ha salido mal, contactese con administración");
+            }
+        } else {
+            try {
+                file.createNewFile();
+                mapper.writeValue(file, aircrafts);
+            } catch (IOException ex) {
+                System.out.println("Algo ha salido mal");
+            }
+        }
+
+        return aircrafts;
+    }
+
+    public static void saveNewFlight(Flight flight) {
+        File file = new File("src/dao/data/Flights.json");
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        Flight[] flights = Persistence.getFlights();
+        Flight[] flights1 = new Flight[flights.length + 1];
+        for (int i = 0; i < flights.length; i++) {
+            flights1[i] = flights[i];
+        }
+        flights1[flights.length] = flight;
         try {
-            file.createNewFile();
-            mapper.writeValue(file,aircrafts);
+            mapper.writeValue(file, flights1);
         } catch (IOException ex) {
             System.out.println("Algo ha salido mal");
         }
     }
-    
-       return aircrafts;
-    }
-    
-   public static void saveNewFlight(Flight flight){
-   File file=new File("src/dao/data/Flights.json");
-   ObjectMapper mapper=new ObjectMapper();
-   mapper.registerModule(new JavaTimeModule());
-   mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-   Flight[] flights=Persistence.getFlights(); 
-   Flight[] flights1=new Flight[flights.length+1];
-   for(int i=0;i<flights.length;i++){
-   flights1[i]=flights[i];
-   }
-   flights1[flights.length]=flight;
-        try{
-        mapper.writeValue(file, flights1);
-        } catch (IOException ex) {
-            System.out.println("Algo ha salido mal");
-        }        
-    } 
-   
-   
 
-   public static Flight[] getFlights(){
-    ObjectMapper mapper=new ObjectMapper();
-    mapper.registerModule(new JavaTimeModule());
-    mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-    Flight[] flights =new Flight[0];
-    File file=new File("src/dao/data/Flights.json");
-    if(file.exists()){
-        try{
-            flights=mapper.readValue(file,Flight[].class);
-        } catch (IOException ex) {
-            System.out.println("Algo ha salido mal, contactese con administración");
-        }     
-       }else{
-        try {
-            file.createNewFile();
-            mapper.writeValue(file,flights);
-        } catch (IOException ex) {
-            System.out.println("Algo ha salido mal");
+    public static Flight[] getFlights() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        Flight[] flights = new Flight[0];
+        File file = new File("src/dao/data/Flights.json");
+        if (file.exists()) {
+            try {
+                flights = mapper.readValue(file, Flight[].class);
+            } catch (IOException ex) {
+                System.out.println("Algo ha salido mal, contactese con administración");
+            }
+        } else {
+            try {
+                file.createNewFile();
+                mapper.writeValue(file, flights);
+            } catch (IOException ex) {
+                System.out.println("Algo ha salido mal");
+            }
         }
-    }
-    
-       return flights;
-    }
 
+        return flights;
+    }
 
     public static ArrayList<Flight> getFlightByDate(LocalDate date) {
         Flight[] flights = Persistence.getFlights();
@@ -144,22 +140,23 @@ public abstract class Persistence {
         }
         return flights1;
     }
-   
-   public static ArrayList<Aircraft> getAvailableAircraft(LocalDate date){
-   ArrayList<Flight> flights=Persistence.getFlightByDate(date);//[]  
-   ArrayList<Aircraft> notAv=new ArrayList<Aircraft>();//[]
-   ArrayList<Aircraft> available=new ArrayList<Aircraft>();//[]
-   Aircraft[]aircrafts=Persistence.getAircrafts();
-   for(Flight i:flights){
-       notAv.add(i.getAircraft());
-   }
-   for(int i=0;i<aircrafts.length;i++){
-   if(!(notAv.contains(aircrafts[i])))
-   available.add(aircrafts[i]);
-   }
-   return available;
-   }
-   
+
+    public static ArrayList<Aircraft> getAvailableAircraft(LocalDate date) {
+        ArrayList<Flight> flights = Persistence.getFlightByDate(date);//[]  
+        ArrayList<Aircraft> notAv = new ArrayList<Aircraft>();//[]
+        ArrayList<Aircraft> available = new ArrayList<Aircraft>();//[]
+        Aircraft[] aircrafts = Persistence.getAircrafts();
+        for (Flight i : flights) {
+            notAv.add(i.getAircraft());
+        }
+        for (int i = 0; i < aircrafts.length; i++) {
+            if (!(notAv.contains(aircrafts[i]))) {
+                available.add(aircrafts[i]);
+            }
+        }
+        return available;
+    }
+
     public static ArrayList<Flight> getFlightByUser(User user) {
         Flight[] flights = Persistence.getFlights();
         ArrayList<Flight> userFlights = new ArrayList<Flight>();
@@ -169,5 +166,41 @@ public abstract class Persistence {
             }
         }
         return userFlights;
+    }
+
+    public static void deleteFlight(Flight flight) {
+        boolean flag = false;
+        int place = 0;
+        Flight[] flights = Persistence.getFlights();
+        for (int i = 0; i < flights.length; i++) {
+            if (flight == flights[i]) {
+                flag = true;
+                place = i;
+            }
+        }
+        if (flag = false) {
+            System.out.println("Error: no se ha podido eliminar el vuelo");
+        } else {
+            Flight[] flights1 = new Flight[flights.length - 1];
+            for (int i = 0; i < place; i++) {
+                flights1[i] = flights[i];
+            }
+            for (int i = place + 1; i < flights.length; i++) {
+                flights1[i - 1] = flights[i];
+            }
+            Persistence.saveNewFlightList(flights1);
+        }
+    }
+
+    public static void saveNewFlightList(Flight[] flights) {
+        File file = new File("src/dao/data/Flights.json");
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        try {
+            mapper.writeValue(file, flights);
+        } catch (IOException ex) {
+            System.out.println("Algo ha salido mal");
+        }
     }
 }

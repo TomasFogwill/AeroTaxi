@@ -8,17 +8,20 @@ import models.Aircraft;
 
 
 public class Flight {
+   private String id; 
    private Aircraft aircraft;
    private Route route;
    private User user;
    private int nPassengers;   
    private LocalDate date;
    private float cost;
+   private static long idCounter=0;
 
     public Flight() {
     }
 
-    public Flight(Aircraft aircraft, Route route, User user, int nPassengers, LocalDate date, float cost) {
+    public Flight(String id, Aircraft aircraft, Route route, User user, int nPassengers, LocalDate date, float cost) {
+        this.id = id;
         this.aircraft = aircraft;
         this.route = route;
         this.user = user;
@@ -26,6 +29,24 @@ public class Flight {
         this.date = date;
         this.cost = cost;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public static long getIdCounter() {
+        return idCounter;
+    }
+
+    public static void setIdCounter(long idCounter) {
+        Flight.idCounter = idCounter;
+    }
+
+    
 
     public Aircraft getAircraft() {
         return aircraft;
@@ -78,9 +99,14 @@ public class Flight {
     
     @Override
     public String toString() {
-        return "Fecha de vuelo: "+date+"\nOrigen: "+route.origin+"\nDestino: "+route.destiny+"\nUsuario a cargo: "+user.getName()+" "+user.getSurname()+"\nCantidad de pasajeros: "+nPassengers+"\nAvion: "+aircraft.getCategory()+" "+aircraft.getId()+"\nCosto: $"+cost;
+        return "ID de vuelo:"+id+"\nFecha de vuelo: "+date+"\nOrigen: "+route.origin+"\nDestino: "+route.destiny+"\nUsuario a cargo: "+user.getName()+" "+user.getSurname()+"\nCantidad de pasajeros: "+nPassengers+"\nAvion: "+aircraft.getCategory()+" "+aircraft.getId()+"\nCosto: $"+cost;
     }
     
+
+public void setIdByMenu(){
+    id=String.valueOf(idCounter);
+    idCounter++;
+}
 
 }
 

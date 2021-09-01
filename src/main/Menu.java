@@ -6,16 +6,18 @@ import models.User;
 import java.util.Scanner;
 
 public abstract class Menu {
+    public final static User adminUser=new User("scanner=new","","codigo numerico",5000);
     
     public static void first(){
     System.out.println("///////////////////AEROTAXI////////////////////");
     System.out.println("//Bienvenido al servicio de gestión de vuelos//\n///////////////////////////////////////////////");
     User user=Executive.initial();
-    if(Objects.isNull(user)){
-    }else if("scanner=new".equals(user.getName())&&"codigo numerico".equals(user.getId())){
+    if(!(user==new User())){
+    if(user==adminUser){
     Menu.menuAdmin();
     }else {    
     Menu.menu(user);
+    }
     }
     }
     

@@ -3,6 +3,7 @@ package main;
 import dao.Persistence;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Scanner;
 import models.Aircraft;
@@ -23,25 +24,11 @@ public class Executive {
         User user = new User();
         System.out.print("Ingrese su DNI para iniciar sesión: ");
         String id = scanner.nextLine();
-        int t = 0;
         for (int i = 0; i < users.size(); i++) {
             if (users.get(i).getId().equals(id)) {
                 user = users.get(i);
-                t++;
             }
-        }
-        switch (t) {
-            case 0:
-                System.out.println("Los datos no se corresponden");
-                user = null;
-                break;
-            case 1:
-                System.out.println("Sesión inciada");
-                break;
-            default:
-                System.out.println("Se encontró un problema, contacte al administrador");
-                user = null;
-        }
+        }      
         return user;
     }
 
@@ -336,6 +323,7 @@ public class Executive {
             String v = scanner.nextLine();
             switch (v) {
                 case "1":
+                    flight.setIdByMenu();
                     Persistence.saveNewFlight(flight);
                     System.out.println("El vuelo se a confirmado");
                     flag = true;
@@ -356,7 +344,7 @@ public class Executive {
     public static void consultFlight(User user) {
         boolean flag = false;
         String answer;
-        Executive.getFlightByMenu(user);
+        Executive.getUserFlightListByMenu(user);
         do {
             System.out.println("¿Desea cancelar alguno?\n1.Si\n2.No");
             answer = scanner.nextLine();
@@ -365,7 +353,7 @@ public class Executive {
                     Executive.deleteFlightByMenu(user);
                     flag = true;
                     break;
-                case "2":
+                case "2": System.out.println("Nada será cancelado");
                     flag = true;
                     break;
                 default:
@@ -375,7 +363,7 @@ public class Executive {
         } while (flag == false);
     }
 
-public static void getFlightByMenu(User user){
+public static void getUserFlightListByMenu(User user){
 ArrayList<Flight> userFlights=Persistence.getFlightByUser(user);
 for(Flight i:userFlights){
     System.out.println(i);
@@ -384,8 +372,74 @@ for(Flight i:userFlights){
 }
 
 public static void deleteFlightByMenu(User user){
-    
-    
+    ArrayList<Flight> userFlights=Persistence.getFlightByUser(user);
+    Flight flight=Executive.getFlightByMenu(userFlights);
+    if(!(flight==new Flight())){
+    boolean flag=Executive.canDeleteFlight(flight);
+    if(flag==true){
+    Executive.confirmDeleteFlight(flight);
+    }    
+    }    
 }
 
+public static Flight getFlightByMenu(ArrayList<Flight> flights){
+    Flight flight=new Flight();
+    boolean flag=false;
+    do{System.out.println("Ingrese el ID del vuelo a cancerlar, o Enter para volver atras");
+    String id;
+    id=scanner.nextLine();
+    switch(id){
+        case "":
+            System.out.println("Se ha cancelado la operacion");
+            flag=true;
+            break;
+        default:
+    for(Flight i: flights){
+    if(id.equals(i.getId())){
+    flight=i;
+    flag=true;
+    }}    
+break;}
+if(flag==false){
+    System.out.println("La opcion ingresada no es válida");
+}    
+}while(flag==false);
+return flight;
+}
+
+public static boolean canDeleteFlight(Flight flight){
+boolean can=false;
+LocalDate now=LocalDate.now();
+LocalDate flightDate=flight.getDate();
+if(now.until(flightDate,ChronoUnit.DAYS)<1){
+    System.out.println("No puede cancelarce un vuelo con menos de 24 horas de anticipación");
+}else{
+    System.out.println("El vuelo puede cancelarce");    
+can=true;
+}
+return can;
+}
+
+public static void confirmDeleteFlight(Flight flight){
+    boolean flag=false;
+    String input;
+    System.out.println("El vuelo seleccionado es el siguiente:\n"+flight.toString());
+    System.out.println("¿Desea cancelarlo?\n1.Si\n2.No");
+    do{input=scanner.nextLine();
+    switch(input){
+        case "1":
+            Persistence.deleteFlight(flight);
+            System.out.println("El vuelo ha sido cancelado");
+            flag=true;
+            break;
+        case "2":
+            System.out.println("El vuelo no se cancelo");
+            flag=true;
+            break;
+        default:
+            System.out.println("No ha ingresado una opción válida");
+            break;
+    }
+    }while(flag==false);
+}
 }
