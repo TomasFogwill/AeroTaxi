@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.UUID;
 import models.Aircraft;
 import models.BronzeAircraft;
 import models.City;
@@ -91,6 +92,7 @@ public class Executive {
             Executive.setUserSurname(user);
             Executive.setUserAge(user);
             Persistence.saveNewUser(user);
+            scanner.nextLine();
         } else {
             user = null;
         }
@@ -188,7 +190,7 @@ public class Executive {
         boolean flag = false;
         Flight flight = new Flight();
         flight.setUser(user);
-        System.out.println("Bienvenido a la gestión de contratación de vuelos");
+        System.out.println("\nBienvenido a la gestión de contratación de vuelos");
         Executive.setFlightDateByMenu(flight);
         flag = Executive.isAvailableAircraftEmpty(flight.getDate());
         if (flag == true) {
@@ -217,7 +219,7 @@ public class Executive {
         LocalDate today = LocalDate.now();
         LocalDate flightDate = LocalDate.now();
         do {
-            System.out.print("Ingrese la fecha a viajar de la siguiente forma dd/mm/yyyy: ");
+            System.out.print("\nIngrese la fecha a viajar de la siguiente forma dd/mm/yyyy: ");
             String inputDate = scanner.nextLine();
             try {
                 flightDate = LocalDate.parse(inputDate, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
@@ -227,7 +229,8 @@ public class Executive {
           if(today.until(flightDate,ChronoUnit.DAYS) < 0){
               System.out.println("No puede gestionar un vuelo en el pasado...");
           }else{
-              flag=true;
+              if(!flightDate.equals(today)){
+              flag=true;}
           }  
         } while (flag == false);
         flight.setDate(flightDate);
@@ -249,7 +252,7 @@ public class Executive {
         int dist;
         City c1 = null;
         City c2 = null;
-        System.out.println("Los vuelos disponibles conectan las siguientes ciudades:\n1.Córdoba\n2.Buenos Aires\n3.Montevideo\n4.Santiago de Chile");
+        System.out.println("\nLos vuelos disponibles conectan las siguientes ciudades:\n1.Córdoba\n2.Buenos Aires\n3.Montevideo\n4.Santiago de Chile");
         do {
             System.out.print("Ingrese el número que corresponda a la ciudad de origen: ");
             String ciudad1 = scanner.nextLine();
@@ -273,7 +276,7 @@ public class Executive {
         } while (c1 == null);
         System.out.println("Usted eligió de origen: " + c1);
         do {
-            System.out.print("\nIngrese el número que corresponda a la ciudad de destino: ");
+            System.out.print("Ingrese el número que corresponda a la ciudad de destino: ");
             String ciudad2 = scanner.nextLine();
             switch (ciudad2) {
                 case "1":
@@ -307,7 +310,7 @@ public class Executive {
     public static void setFlightPassengers(Flight flight) {
         boolean flag = false;
         do {
-            System.out.print("Indique la cantidad de pasajeros que lo acompañaran: ");
+            System.out.print("\nIndique la cantidad de pasajeros que lo acompañaran: ");
             if (!scanner.hasNextInt()) {
                 System.out.println("No ha ingresado un número válido");
                 scanner.nextLine();
@@ -316,6 +319,7 @@ public class Executive {
                 flag = true;
             }
         } while (flag == false);
+    scanner.nextLine();
     }
 
     public static boolean isAvailableAircraftEmpty(LocalDate flightDate, int cantPassengers) {
@@ -337,7 +341,7 @@ public class Executive {
 
     public static void setFlightAircraftByMenu(Flight flight) {
         ArrayList<Aircraft> available = Persistence.getAvailableAircraft(flight.getDate());
-        System.out.println("A continuación se le presentan las fichas de los aviones disponibles:\n");
+        System.out.println("\nA continuación se le presentan las fichas de los aviones disponibles:\n");
         for (Aircraft i : available) {
             if (i.getMaxPas() > flight.getnPassengers()) {
                 System.out.println(i.userString() + "\n");
@@ -345,18 +349,16 @@ public class Executive {
         }
         boolean flag = false;
         do {
-            System.out.println("Ingrese el ID deseado o ingrese 0 para salir");
+            System.out.println("Ingrese el ID deseado o ingrese Enter para salir");
             String anames = scanner.nextLine();
             switch (anames) {
-                case "0":
-                    System.out.println("Se cancela la operacion");
+                case "":
                     flag = true;
                     break;
                 default:
                     for (Aircraft i : available) {
-                        if (anames.equals(i.getId())) {
-                            flight.setAircraft(i);
-                            System.out.println("Usted seleccionó el avión con ID " + flight.getAircraft().getId() + "de categoría " + flight.getAircraft().getClass());
+                        if (anames.equals(i.getId().toString())) {
+                            flight.setAircraft(i);                           
                             flag = true;
                         }
                     }
@@ -371,6 +373,8 @@ public class Executive {
         boolean confirm = true;
         if (flight.getAircraft() == null) {
             confirm = false;
+        }else{
+        flight.setId(UUID.randomUUID());
         }
         return confirm;
     }
@@ -391,13 +395,12 @@ public class Executive {
 
     public static void confirmFlight(Flight flight) {
         boolean flag = false;
-        System.out.println("El ticket de vuelo:\n" + flight.toString());
+        System.out.println("\nEl ticket de vuelo:\n" + flight.toString());
         do {
-            System.out.println("¿Confirmar?\n1.Si\n2.No");
+            System.out.println("\n¿Confirmar?\n1.Si\n2.No");
             String v = scanner.nextLine();
             switch (v) {
                 case "1":
-                    flight.setIdByMenu();
                     Persistence.saveNewFlight(flight);
                     Executive.setUserNewData(flight);
                     System.out.println("El vuelo se a confirmado");
@@ -416,14 +419,18 @@ public class Executive {
 
     public static void setUserNewData(Flight flight) {
         ArrayList<User> users = Persistence.getUsers();
+        ArrayList<User> newUsers=new ArrayList<User>();
         String category = flight.getAircraft().getCategory();
         float cost = flight.getCost();
         User user = flight.getUser();
-        users.remove(user);
+        for(User i: users){
+        if(!user.getId().equals(i.getId()))
+        newUsers.add(i);
+        }
         Executive.setUserBestCategory(user, category);
         Executive.setUserTotalFlight(user, cost);
-        users.add(user);
-        Persistence.saveNewUserList(users);
+        newUsers.add(user);
+        Persistence.saveNewUserList(newUsers);
     }
 
     public static void setUserBestCategory(User user, String flightCategory) {
@@ -476,12 +483,12 @@ public class Executive {
         boolean areFlights=false;
         ArrayList<Flight> userFlights = Persistence.getFlightByUser(user);
         if(userFlights.isEmpty()){
-            System.out.println("No hay vuelos para mostrar");
+            System.out.println("\nNo hay vuelos para mostrar");
         }else{
         for (Flight i : userFlights) {
-            System.out.println(i);
+            System.out.println("\n"+i);
         }
-        System.out.println("Estos son los vuelos confirmados");
+        System.out.println("\nEstos son los vuelos confirmados");
         areFlights=true;
         }
     return areFlights;    
@@ -490,7 +497,7 @@ public class Executive {
     public static void deleteFlightByMenu(User user) {
         ArrayList<Flight> userFlights = Persistence.getFlightByUser(user);
         Flight flight = Executive.getFlightByMenu(userFlights);
-        if (!(flight == new Flight())) {
+        if (flight != null) {
             boolean flag = Executive.canDeleteFlight(flight);
             if (flag == true) {
                 Executive.confirmDeleteFlight(flight);
@@ -499,7 +506,7 @@ public class Executive {
     }
 
     public static Flight getFlightByMenu(ArrayList<Flight> flights) {
-        Flight flight = new Flight();
+        Flight flight = null;
         boolean flag = false;
         do {
             System.out.println("Ingrese el ID del vuelo a cancerlar, o Enter para volver atras");
@@ -512,7 +519,7 @@ public class Executive {
                     break;
                 default:
                     for (Flight i : flights) {
-                        if (id.equals(i.getId())) {
+                        if (id.equals(i.getId().toString())) {
                             flight = i;
                             flag = true;
                         }
@@ -530,10 +537,10 @@ public class Executive {
         boolean can = false;
         LocalDate now = LocalDate.now();
         LocalDate flightDate = flight.getDate();
-        if (now.until(flightDate, ChronoUnit.DAYS) < 1) {
-            System.out.println("No puede cancelarce un vuelo con menos de 24 horas de anticipación");
+        if (now.until(flightDate, ChronoUnit.DAYS) < 2) {
+            System.out.println("\nNo puede cancelarce un vuelo con menos de 24 horas de anticipación\n");
         } else {
-            System.out.println("El vuelo puede cancelarce");
+            System.out.println("\nEl vuelo puede cancelarce\n");
             can = true;
         }
         return can;

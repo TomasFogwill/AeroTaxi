@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.UUID;
 import models.Aircraft;
 import models.BronzeAircraft;
 import models.Flight;
@@ -40,8 +41,7 @@ public abstract class Admin {
     }
 
     public static void setAircraftId(Aircraft aircraft) {
-        String id=String.valueOf(Aircraft.getIdCounter());
-        Aircraft.setIdCounter(Aircraft.getIdCounter()+1);
+        UUID id=UUID.randomUUID();;
         aircraft.setId(id);
     }
 
@@ -49,7 +49,7 @@ public abstract class Admin {
         float maxFuel = 0;
         boolean flag = false;
         do {
-            System.out.print("Ingrese la capacidad de combustible del avión: ");
+            System.out.print("\nIngrese la capacidad de combustible del avión: ");
             if (!scanner.hasNextFloat()) {
                 System.out.println("No a ingresado un número válido");
                 scanner.nextLine();
@@ -119,7 +119,7 @@ public abstract class Admin {
         Kind kindProp = null;
         boolean flag = false;
         do {
-            System.out.println("Los posibles tipos de propuslsión son los sigientes\n1.Motor a reacción\n2.Motor a hélice\n3.Motor a pistones ");
+            System.out.println("\nLos posibles tipos de propuslsión son los sigientes\n1.Motor a reacción\n2.Motor a hélice\n3.Motor a pistones ");
             System.out.print("Ingrese el número correspondiente: ");
             String input = scanner.nextLine();
             switch (input) {
@@ -201,7 +201,7 @@ public abstract class Admin {
         String input;
         System.out.println("\n" + aircraft.toString());
         do {
-            System.out.println("¿Confirmar y guardar?\n1.Si\n2.No");
+            System.out.println("\n¿Confirmar y guardar?\n1.Si\n2.No");
             input = scanner.nextLine();
             switch (input) {
                 case "1":
@@ -235,12 +235,12 @@ public abstract class Admin {
         } while (flag == false);
         ArrayList<Flight> flights = Persistence.getFlightByDate(date);
         if (flights.isEmpty()) {
-            System.out.println("No hay vuelos para mostrar");
+            System.out.println("\nNo hay vuelos para mostrar");
         } else {
             for (Flight i : flights) {
-                System.out.println(i.toString());
+                System.out.println("\n"+i.toString());
             }
-            System.out.println("Esta es la lista de vuelos");
+            System.out.println("\nEsta es la lista de vuelos");
         }
 
     }
@@ -248,9 +248,9 @@ public abstract class Admin {
     public static void userList() {
         ArrayList<User> users = Persistence.getUsers();
         for (User i : users) {
-            System.out.println(i.toString());
+            System.out.println("\n"+i.toString());
         }
-        System.out.println("Esta es la lista de usuarios");
+        System.out.println("\nEsta es la lista de usuarios");
     }
 
 }

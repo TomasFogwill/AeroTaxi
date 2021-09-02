@@ -1,26 +1,22 @@
 package models;
 
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.LocalDate;
-import models.Aircraft;
+import java.util.UUID;
 
 
 public class Flight {
-   private String id; 
+   private UUID id; 
    private Aircraft aircraft;
    private Route route;
    private User user;
    private int nPassengers;   
    private LocalDate date;
    private float cost;
-   private static long idCounter=0;
 
     public Flight() {
     }
 
-    public Flight(String id, Aircraft aircraft, Route route, User user, int nPassengers, LocalDate date, float cost) {
+    public Flight(UUID id, Aircraft aircraft, Route route, User user, int nPassengers, LocalDate date, float cost) {
         this.id = id;
         this.aircraft = aircraft;
         this.route = route;
@@ -30,24 +26,15 @@ public class Flight {
         this.cost = cost;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public static long getIdCounter() {
-        return idCounter;
-    }
-
-    public static void setIdCounter(long idCounter) {
-        Flight.idCounter = idCounter;
-    }
-
     
-
     public Aircraft getAircraft() {
         return aircraft;
     }
@@ -103,10 +90,6 @@ public class Flight {
     }
     
 
-public void setIdByMenu(){
-    id=String.valueOf(idCounter);
-    idCounter++;
-}
 
 }
 

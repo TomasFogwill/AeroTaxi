@@ -2,11 +2,12 @@
 package models;
 
 import java.util.Locale;
+import java.util.UUID;
 
 public class SilverAircraft extends Aircraft{
     public String category="Silver";
 
-    public SilverAircraft(String id, float maxFuel, float costXkm, int maxPas, float vMax, Kind kindProp) {
+    public SilverAircraft(UUID id, float maxFuel, float costXkm, int maxPas, float vMax, Kind kindProp) {
         super(id, maxFuel, costXkm, maxPas, vMax, kindProp,"Silver");
     }
 
@@ -23,11 +24,11 @@ public class SilverAircraft extends Aircraft{
 
     
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

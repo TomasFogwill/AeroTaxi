@@ -1,6 +1,6 @@
 package models;
 
-import java.util.Locale.Category;
+import java.util.UUID;
 
 
 public class BronzeAircraft extends Aircraft{
@@ -9,7 +9,7 @@ public class BronzeAircraft extends Aircraft{
     public BronzeAircraft() {
     }
 
-    public BronzeAircraft(String id, float maxFuel, float costXkm, int maxPas, float vMax, Kind kindProp) {
+    public BronzeAircraft(UUID id, float maxFuel, float costXkm, int maxPas, float vMax, Kind kindProp) {
         super(id, maxFuel, costXkm, maxPas, vMax, kindProp, "Bronce");
     }
 
@@ -23,11 +23,11 @@ public class BronzeAircraft extends Aircraft{
 
     
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

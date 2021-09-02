@@ -8,9 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import main.Admin;
 import models.Aircraft;
-import models.BronzeAircraft;
 import models.Flight;
 import models.User;
 
@@ -127,7 +125,7 @@ public abstract class Persistence {
         ArrayList<Flight> flightsList = new ArrayList<Flight>();
                 Flight[] flights = Persistence.getFlights();
         for (int i = 0; i < flights.length; i++) {
-            if (flights[i].getDate() == date) {
+            if (flights[i].getDate().equals(date)) {
                 flightsList.add(flights[i]);
             }
         }
@@ -154,7 +152,7 @@ public abstract class Persistence {
         Flight[] flights = Persistence.getFlights();
         ArrayList<Flight> userFlights = new ArrayList<>();
         for (int i = 0; i < flights.length; i++) {
-            if (flights[i].getUser() == user) {
+            if (flights[i].getUser().getId().equals(user.getId()) ) {
                 userFlights.add(flights[i]);
             }
         }
@@ -166,7 +164,7 @@ public abstract class Persistence {
         boolean flag = false;
         int place = 0;
         for (int i = 0; i < flights.length; i++) {
-            if (flight == flights[i]) {
+            if (flight.getId().toString().equals(flights[i].getId().toString())) {
                 flag = true;
                 place = i;
             }

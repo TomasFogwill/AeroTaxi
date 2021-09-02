@@ -4,6 +4,7 @@ package models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
@@ -16,28 +17,19 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 )
 
 public abstract class Aircraft {
-    protected String id;//id para reconocer el avión
+    protected UUID id;//id para reconocer el avión
     protected float maxFuel;//capacidad de combustible
     protected float costXkm;// costo por kilómetro de vuelo
     protected int maxPas;// capacidad de pasajeros
     protected float vMax;// velocidad máx en km/h
     protected Kind kindProp;// tipo de motor de propulsión
     protected String category;
-    protected static long idCounter;
-
-    public static long getIdCounter() {
-        return idCounter;
-    }
-
-    public static void setIdCounter(long idCounter) {
-        Aircraft.idCounter = idCounter;
-    }
     
 
     public Aircraft() {
     }
 
-    public Aircraft(String id, float maxFuel, float costXkm, int maxPas, float vMax, Kind kindProp, String category) {
+    public Aircraft(UUID id, float maxFuel, float costXkm, int maxPas, float vMax, Kind kindProp, String category) {
         this.id = id;
         this.maxFuel = maxFuel;
         this.costXkm = costXkm;
@@ -56,11 +48,11 @@ public abstract class Aircraft {
     }
 
    
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

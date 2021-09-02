@@ -1,13 +1,14 @@
 package models;
 
 import java.util.Locale;
+import java.util.UUID;
 
 
 public class GoldAircraft extends Aircraft{
     public final String category="Gold";
     String conContWifi;
 
-    public GoldAircraft(String conContWifi, String id, float maxFuel, float costXkm, int maxPas, float vMax, Kind kindProp) {
+    public GoldAircraft(String conContWifi, UUID id, float maxFuel, float costXkm, int maxPas, float vMax, Kind kindProp) {
         super(id, maxFuel, costXkm, maxPas, vMax, kindProp,"Gold");
         this.conContWifi = conContWifi;
     }
@@ -30,11 +31,11 @@ public class GoldAircraft extends Aircraft{
         this.conContWifi = conContWifi;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

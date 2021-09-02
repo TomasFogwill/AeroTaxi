@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.UUID;
 import models.Aircraft;
 import models.BronzeAircraft;
 import models.City;
@@ -65,6 +66,10 @@ public static void main(String[] args) throws JsonProcessingException, IOExcepti
 Menu.first();
 //User user=new User();
 //    System.out.println(user.getId());
+//UUID uuid = UUID.randomUUID();
+//    System.out.println(uuid);
+//Scanner scanner=new Scanner(System.in);
+//    System.out.println(scanner.nextLine());
 }
 
 }
