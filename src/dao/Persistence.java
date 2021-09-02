@@ -134,16 +134,22 @@ public abstract class Persistence {
 
     public static ArrayList<Aircraft> getAvailableAircraft(LocalDate date) {
         ArrayList<Flight> flights = Persistence.getFlightByDate(date);
-        ArrayList<Aircraft> notAv = new ArrayList<Aircraft>();
+        ArrayList<String> notAvAircraftId = new ArrayList<String>();
         ArrayList<Aircraft> available = new ArrayList<Aircraft>();
         Aircraft[] aircrafts = Persistence.getAircrafts();
         for (Flight i : flights) {
-            notAv.add(i.getAircraft());
+            notAvAircraftId.add(i.getAircraft().getId().toString());
         }
-        for (int i = 0; i < aircrafts.length; i++) {
-            if (!(notAv.contains(aircrafts[i]))) {
-                available.add(aircrafts[i]);
-            }
+        for(int j=0;j<aircrafts.length;j++){
+        boolean isAvailable=true;
+        for(String i:notAvAircraftId){
+        if(aircrafts[j].getId().toString().equals(i)){
+        isAvailable=false;    
+        }    
+        }
+        if(isAvailable==true){
+        available.add(aircrafts[j]);
+        }
         }
         return available;
     }

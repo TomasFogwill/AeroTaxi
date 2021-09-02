@@ -331,7 +331,7 @@ public class Executive {
                 a = i.getMaxPas();
             }
         }
-        if (cantPassengers > a) {
+        if (cantPassengers > a+1) {
             System.out.println("No tenemos aviones disponibles para esa cantidad de pasajeros");
         } else {
             isEmpty = false;
@@ -401,8 +401,8 @@ public class Executive {
             String v = scanner.nextLine();
             switch (v) {
                 case "1":
-                    Persistence.saveNewFlight(flight);
                     Executive.setUserNewData(flight);
+                    Persistence.saveNewFlight(flight);
                     System.out.println("El vuelo se a confirmado");
                     flag = true;
                     break;
@@ -556,6 +556,7 @@ public class Executive {
             switch (input) {
                 case "1":
                     Persistence.deleteFlight(flight);
+                    Executive.deleteFlightDataFromUser(flight);                    
                     System.out.println("El vuelo ha sido cancelado");
                     flag = true;
                     break;
@@ -568,5 +569,48 @@ public class Executive {
                     break;
             }
         } while (flag == false);
+    }
+
+public static void deleteFlightDataFromUser(Flight flight){
+ArrayList<User> users = Persistence.getUsers();
+        ArrayList<User> newUsers=new ArrayList<User>();
+        User user = flight.getUser();
+        for(User i: users){
+        if(!user.getId().equals(i.getId()))
+        newUsers.add(i);
+        }
+        user.setBest(Executive.getOldCategory(user)); 
+        float flightTotal=user.getFlightTot();
+        user.setFlightTot(flightTotal-flight.getCost());
+        System.out.println("La cuenta da: "+user.getFlightTot());
+        newUsers.add(user);
+        Persistence.saveNewUserList(newUsers);    
+}
+
+    public static String getOldCategory(User user) {
+        String oldCategory = "Ninguna";
+        ArrayList<Flight> flights = Persistence.getFlightByUser(user);
+        ArrayList<String> categories = new ArrayList<String>();
+        for (Flight i : flights) {
+            categories.add(i.getAircraft().getCategory());
+        }
+        if (!categories.isEmpty()) {
+            for (String i : categories) {
+                if (i.equals("Bronce")) {
+                    oldCategory = "Bronce";
+                }
+            }
+            for (String i : categories) {
+                if (i.equals("Silver")) {
+                    oldCategory = "Silver";
+                }
+            }
+            for (String i : categories) {
+                if (i.equals("Gold")) {
+                    oldCategory = "Gold";
+                }
+            }
+        }
+        return oldCategory;
     }
 }
