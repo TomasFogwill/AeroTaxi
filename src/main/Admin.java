@@ -14,7 +14,7 @@ import models.Kind;
 import models.SilverAircraft;
 import models.User;
 
-public abstract class Admin {
+public class Admin {
 
     public static Scanner scanner = new Scanner(System.in);
 

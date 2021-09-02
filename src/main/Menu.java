@@ -5,7 +5,7 @@ import java.util.Objects;
 import models.User;
 import java.util.Scanner;
 
-public abstract class Menu {
+public class Menu {
     
     public static void first(){
     System.out.println("///////////////////AEROTAXI////////////////////");

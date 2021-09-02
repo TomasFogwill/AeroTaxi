@@ -12,7 +12,7 @@ import models.Aircraft;
 import models.Flight;
 import models.User;
 
-public abstract class Persistence {
+public class Persistence {
 
     public static File usersFile = new File("src/dao/data/Users.json");
     public static File aircraftsFile = new File("src/dao/data/Aircrafts.json");
